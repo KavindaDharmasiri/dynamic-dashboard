@@ -1,0 +1,62 @@
+<div class="col-md-12">
+  <div class="row">
+    <div class="container-fluid content">
+
+<div class="col-md-12 second-div">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex" style="display: flex !important
+;">
+        <div class="card" *ngIf="isApproval">
+          <img src="../../../../assets/img/dashboard/icons/approvals.svg" alt="Approvals">
+          <div>
+            <h3>{{ approveCount }}</h3>
+            <p>Approvals</p>
+          </div>
+          <a class="link-icon" routerLink="/workflow/approve">
+            <i class="material-icons">
+              visibility
+            </i>
+          </a>
+        </div>
+        <div class="card" *ngIf="isInprogress">
+          <img src="../../../../../assets/img/dashboard/icons/on-going.svg" alt="Approvals">
+          <div>
+            <h3>{{ inProgressCount }}</h3>
+            <p>On going</p>
+          </div>
+          <a class="link-icon" routerLink="/workflow/in-progress">
+            <i class="material-icons">
+              visibility
+            </i>
+          </a>
+        </div>
+        <div class="card" *ngIf="isCompleted">
+          <img src="../../../../../assets/img/dashboard/icons/completed.svg" alt="Approvals">
+          <div>
+            <h3>{{ completedCount }}</h3>
+            <p>Completed</p>
+          </div>
+          <a class="link-icon" routerLink="/workflow/completed">
+            <i class="material-icons">
+              visibility
+            </i>
+          </a>
+        </div>
+        <div class="card" *ngIf="isRejected">
+          <img src="../../../../../assets/img/dashboard/icons/rejected.svg" alt="Approvals">
+          <div>
+            <h3>{{ rejectedCount }}</h3>
+            <p>Rejected</p>
+          </div>
+          <a class="link-icon" routerLink="/workflow/rejected">
+            <i class="material-icons">
+              visibility
+            </i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    </div></div></div>

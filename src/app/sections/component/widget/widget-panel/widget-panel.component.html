@@ -1,0 +1,14 @@
+<div class="widget-list" style="cursor: move;">
+  <div class="widget-panel-header">
+    <mat-icon>drag_indicator</mat-icon>
+    Widgets
+  </div>
+  @for(widget of store.widgetsToAdd(); track widget.id) {
+    <div cdkDrag class="widget-box" [cdkDragData]="widget.id">
+      {{widget.label}}
+      <div *cdkDragPlaceholder>
+
+      </div>
+    </div>
+  }
+</div>

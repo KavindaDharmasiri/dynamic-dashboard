@@ -1,0 +1,72 @@
+
+<div cdkDropListGroup  >
+  <div class="header">
+    <h2>Channel dashboard</h2>
+
+    <!-- Mode Toggle: Edit / View -->
+    <div class="mode-toggle" style="margin-right: 12px;">
+      <mat-button-toggle-group
+        [value]="viewMode()"
+        (valueChange)="onModeChange($event)"
+        aria-label="Dashboard mode">
+        <mat-button-toggle value="view">View</mat-button-toggle>
+        <mat-button-toggle value="edit">Edit</mat-button-toggle>
+      </mat-button-toggle-group>
+
+    </div>
+
+
+    <button mat-raised-button [disabled]="viewMode() == 'view'"  (click)="widgetsOpen.set(!widgetsOpen())"
+    >
+
+      @if(widgetsOpen() ){
+        <mat-icon>close</mat-icon>
+      } @else {
+        <mat-icon>add_circle</mat-icon>
+      }
+      widget
+    </button>
+    @if (widgetsOpen() && viewMode() == 'edit'){
+      <app-widget-panel
+        cdkDropList
+        [cdkDropListDisabled]="viewMode() === 'view'"
+        [cdkDragDisabled]="viewMode() === 'view'"
+        (cdkDropListDropped)="widgetPutBack($event)"
+        cdkDrag
+      />
+    }
+    <mat-menu #widgetmenu="matMenu">
+      @for (widget of store.widgetsToAdd(); track widget.id) {
+        <button mat-menu-item (click)="store.addWidget(widget)">
+          {{widget.label}}
+        </button>
+      } @empty {
+        <button mat-menu-item >
+          No widgets to add
+        </button>
+      }
+    </mat-menu>
+  </div>
+  @if (store.addedWidgets().length > 0){
+  <div #dashboard class="dashboard-widgets" >
+    @for (w of store.addedWidgets(); track w.id) {
+      <app-widget cdkDropList [data]="w" [mode]="viewMode()" (cdkDropListDropped)="drop($event)" [cdkDropListData]="w.id" [cdkDropListDisabled]="viewMode() === 'view'"/>
+    }
+    <div cdkDropList></div>
+  </div>
+  } @else {
+    <div #dashboard class="dashboard-widgets"
+         cdkDropList
+         [cdkDropListData]="store.addedWidgets()"
+         (cdkDropListDropped)="drop2($event)"
+    >
+      @for (w of store.addedWidgets(); track w.id) {
+        <app-widget cdkDrag [data]="w" [mode]="viewMode()" [cdkDragData]="w.id" />
+      }
+      <div cdkDropList class="empty-drop-zone">
+        <mat-icon>add_box</mat-icon>
+        <span>Drag a widget here</span>
+      </div>
+    </div>
+  }
+</div>

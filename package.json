@@ -1,0 +1,104 @@
+{
+  "name": "angular-gridster2",
+  "version": "20.2.2",
+  "license": "MIT",
+  "scripts": {
+    "husky": "husky",
+    "commitlint": "commitlint",
+    "lint-staged": "lint-staged",
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build-lib": "ng build angular-gridster2",
+    "test": "ng test",
+    "test-lib": "ng test angular-gridster2",
+    "lint": "ng lint",
+    "watch": "ng build --watch --configuration development",
+    "deploy": "ng deploy",
+    "postinstall": "husky install"
+  },
+  "homepage": "https://tiberiuzuld.github.io/angular-gridster2",
+  "bugs": {
+    "url": "https://github.com/tiberiuzuld/angular-gridster2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tiberiuzuld/angular-gridster2.git"
+  },
+  "description": "Angular gridster 2",
+  "keywords": [
+    "angular",
+    "angular2",
+    "typescript",
+    "dashboard",
+    "gridster",
+    "gridster2",
+    "resize",
+    "drag&drop",
+    "widgets"
+  ],
+  "authors": [
+    "Kavinda_D"
+  ],
+  "files": [
+    "dist/*"
+  ],
+  "dependencies": {
+    "@angular/animations": "20.1.6",
+    "@angular/cdk": "20.1.5",
+    "@angular/common": "20.1.6",
+    "@angular/compiler": "20.1.6",
+    "@angular/core": "20.1.6",
+    "@angular/elements": "^20.1.6",
+    "@angular/forms": "20.1.6",
+    "@angular/material": "20.1.5",
+    "@angular/platform-browser": "20.1.6",
+    "@angular/router": "20.1.6",
+    "@tailwindcss/postcss": "^4.1.11",
+    "animate-css-grid": "^1.5.1",
+    "bootstrap": "^5.3.7",
+    "chart.js": "^4.5.0",
+    "marked": "16.1.2",
+    "ngx-markdown": "20.0.0",
+    "rxjs": "7.8.2",
+    "tslib": "2.8.1",
+    "zone.js": "0.15.1"
+  },
+  "devDependencies": {
+    "@angular/build": "20.1.5",
+    "@angular/cli": "20.1.5",
+    "@angular/compiler-cli": "20.1.6",
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@types/jasmine": "5.1.8",
+    "@types/node": "22.15.35",
+    "angular-cli-ghpages": "2.0.3",
+    "angular-eslint": "20.1.1",
+    "autoprefixer": "^10.4.21",
+    "eslint": "9.33.0",
+    "husky": "9.1.7",
+    "jasmine-core": "5.9.0",
+    "karma": "6.4.4",
+    "karma-chrome-launcher": "3.2.0",
+    "karma-coverage": "2.2.1",
+    "karma-jasmine": "5.1.0",
+    "karma-jasmine-html-reporter": "2.1.0",
+    "lint-staged": "16.1.5",
+    "ng-packagr": "20.1.0",
+    "postcss": "^8.5.6",
+    "prettier": "3.6.2",
+    "tailwindcss": "^4.1.11",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.39.0"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*.{html,scss,js,ts,md}": [
+      "prettier --write"
+    ]
+  }
+}
