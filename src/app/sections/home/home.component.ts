@@ -255,24 +255,28 @@ export class HomeComponent implements OnInit, AfterViewInit {
       container,
       item: { data }
     } = event;
-    if (data) {
-      this.store.insertWidgetAtPosition(data, container.data);
-      return;
+    
+    if (previousContainer !== container) {
+      if (data && typeof data === 'number') {
+        // Adding new widget from palette
+        this.store.insertWidgetAtPosition(data, container.data);
+      } else {
+        // Moving existing widget
+        this.store.updateWidgetPosition(previousContainer.data, container.data);
+      }
     }
-    this.store.updateWidgetPosition(previousContainer.data, container.data);
   }
 
   drop2(event: CdkDragDrop<any, any>) {
-    const {
-      previousContainer,
-      container,
-      item: { data }
-    } = event;
-    if (data) {
-      this.store.insertWidgetAtPosition(data, container.data);
-      return;
+    const { previousContainer, container, item } = event;
+    const widgetId = item.data;
+    
+    if (previousContainer !== container && widgetId) {
+      const widget = this.store.widgets().find(w => w.id === widgetId);
+      if (widget) {
+        this.store.addWidget(widget);
+      }
     }
-    this.store.updateWidgetPosition(previousContainer.data, container.data);
   }
 
   widgetsOpen = signal(false);

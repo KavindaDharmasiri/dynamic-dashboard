@@ -63,20 +63,20 @@
   @if (store.addedWidgets().length > 0){
   <div #dashboard class="dashboard-widgets" >
     @for (w of store.addedWidgets(); track w.id) {
-      <app-widget cdkDropList [data]="w" [mode]="viewMode()" (cdkDropListDropped)="drop($event)" [cdkDropListData]="w.id" [cdkDropListDisabled]="viewMode() === 'view'"/>
+      <app-widget cdkDropList [data]="w" [mode]="viewMode()" (cdkDropListDropped)="drop($event)" [cdkDropListData]="w.id" [cdkDropListDisabled]="viewMode() === 'view'" cdkDropListSortingDisabled/>
     }
     <div cdkDropList></div>
   </div>
   } @else {
     <div #dashboard class="dashboard-widgets"
          cdkDropList
-         [cdkDropListData]="store.addedWidgets()"
+         [cdkDropListData]="-1"
          (cdkDropListDropped)="drop2($event)"
     >
       @for (w of store.addedWidgets(); track w.id) {
         <app-widget cdkDrag [data]="w" [mode]="viewMode()" [cdkDragData]="w.id" />
       }
-      <div cdkDropList class="empty-drop-zone">
+      <div class="empty-drop-zone">
         <mat-icon>add_box</mat-icon>
         <span>Drag a widget here</span>
       </div>
@@ -87,9 +87,7 @@
     <app-widget-panel
       cdkDropList
       [cdkDropListDisabled]="viewMode() === 'view'"
-      [cdkDragDisabled]="viewMode() === 'view'"
       (cdkDropListDropped)="widgetPutBack($event)"
-      cdkDrag
     />
   }
   
