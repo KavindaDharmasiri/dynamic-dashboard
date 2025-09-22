@@ -101,16 +101,19 @@ export class DashboardService implements OnDestroy {
     }
 
     try {
-      const widgetsWithoutContent: Partial<Widget>[] = widgets.map(
-        w => ({ ...w })
-      );
-      widgetsWithoutContent.forEach(widget => {
-        delete widget.content;
-      });
+      const widgetsToSave = widgets.map(w => ({
+        id: w.id,
+        rows: w.rows,
+        cols: w.cols,
+        backgroundColor: w.backgroundColor,
+        color: w.color,
+        sliceId: w.sliceId
+      }));
       localStorage.setItem(
         'dashboardWidgets',
-        JSON.stringify(widgetsWithoutContent)
+        JSON.stringify(widgetsToSave)
       );
+      console.log('Saved widgets:', widgetsToSave);
     } catch (error) {
       console.error('Failed to save widgets:', error);
     }
@@ -197,8 +200,8 @@ export class DashboardService implements OnDestroy {
           // 2. ✅ Merge: use saved layout, but keep content from template
           return {
             ...template,           // content, label, sliceId, etc.
-            rows: saved.rows,      // ✅ Preserve saved size
-            cols: saved.cols,
+            rows: saved.rows ?? template.rows,      // ✅ Preserve saved size
+            cols: saved.cols ?? (saved as any).columns ?? template.cols,  // Handle both old and new property names
             backgroundColor: saved.backgroundColor ?? template.backgroundColor,
             color: saved.color ?? template.color
           };

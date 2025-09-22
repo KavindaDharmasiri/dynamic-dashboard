@@ -23,14 +23,15 @@ import { ChartSettingsComponent } from '../settings/chart-settings/chart-setting
   standalone: true,
   styleUrl: './widget.component.css',
   host: {
-    '[attr.data-cols]': 'data().columns || 1',
+    '[attr.data-cols]': 'data().cols || 1',
     '[attr.data-rows]': 'data().rows || 1',
-    '[style.grid-column]': '"span " + (data().columns || 1)',
+    '[style.grid-column]': '"span " + Math.min(data().cols || 1, 4)',
     '[style.grid-row]': '"span " + (data().rows || 1)'
   }
 })
 export class WidgetComponent {
   data = input.required<Widget>();
+  Math = Math;
 
   showOptions = signal(false);
   @Input() mode!: 'view' | 'edit';

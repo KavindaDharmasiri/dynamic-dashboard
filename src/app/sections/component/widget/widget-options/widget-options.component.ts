@@ -18,4 +18,14 @@ export class WidgetOptionsComponent {
   @Input() data!: Widget;
 
   store = inject(DashboardService);
+  
+  updateCols(value: number) {
+    console.log('Updating cols to:', value, 'for widget:', this.data.id);
+    this.store.updateWidget(this.data.id, { cols: value });
+  }
+  
+  updateRows(value: number) {
+    console.log('Updating rows to:', value, 'for widget:', this.data.id);
+    this.store.updateWidget(this.data.id, { rows: value });
+  }
 }

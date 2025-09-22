@@ -61,17 +61,36 @@ import { ChartSettingsComponent } from '../component/settings/chart-settings/cha
     .dashboard-widgets {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(4, minmax(200px, 1fr));
+      grid-auto-rows: minmax(200px, auto);
       gap: 1.5rem;
       margin-top: 1.5rem;
-      min-height: calc(100vh - 200px);
-      will-change: contents;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
       
       &.cdk-drop-list-receiving {
         background: rgba(99, 102, 241, 0.05);
         border-radius: var(--radius-lg);
         transition: var(--transition-fast);
       }
+    }
+    
+    .drop-placeholder {
+      background: rgba(99, 102, 241, 0.1);
+      border: 2px dashed rgba(99, 102, 241, 0.5);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(99, 102, 241, 0.7);
+      font-weight: 500;
+      transition: all 0.2s ease;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
     }
     
     app-widget {
@@ -87,18 +106,28 @@ import { ChartSettingsComponent } from '../component/settings/chart-settings/cha
       grid-row: 1 / -1;
     }
     
-    @media (max-width: 1024px) {
+    @media (max-width: 1200px) {
+      .dashboard-widgets {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      app-widget[data-cols="4"] {
+        grid-column: 1 / -1 !important;
+      }
+    }
+    
+    @media (max-width: 900px) {
       .dashboard-widgets {
         grid-template-columns: repeat(2, 1fr);
       }
       
       app-widget[data-cols="4"],
       app-widget[data-cols="3"] {
-        grid-column: 1 / -1;
+        grid-column: 1 / -1 !important;
       }
     }
     
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
       .dashboard-widgets {
         grid-template-columns: 1fr;
         gap: 1rem;
