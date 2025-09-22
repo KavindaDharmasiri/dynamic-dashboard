@@ -16,8 +16,8 @@ export class SupersetComponent  implements AfterViewInit{
 
   ngAfterViewInit() {
     this.embedService.embedDashboard(this.supersetDiv.nativeElement).subscribe({
-      next: () => console.log('Dashboard embedded'),
-      error: (err) => console.error(err),
+      next: () => {/* Dashboard embedded successfully */},
+      error: (err) => {/* Handle dashboard embedding error */},
     });
   }
 }

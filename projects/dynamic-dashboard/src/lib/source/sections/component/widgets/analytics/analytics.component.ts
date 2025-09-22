@@ -4,19 +4,19 @@ import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
-  selector: 'app-anelatics',
+  selector: 'app-analytics',
   imports: [MatButtonModule, NgIf, MatMenu, MatMenuTrigger, NgClass, NgForOf],
-  templateUrl: './anelatics.component.html',
+  templateUrl: './analytics.component.html',
   standalone: true,
-  styleUrl: './anelatics.component.scss'
+  styleUrl: './analytics.component.scss'
 })
-export class AnelaticsComponent  {
+export class AnalyticsComponent  {
   // chart = viewChild.required<ElementRef>('chart');
   isSaveWFButton=true;
   masterTemplateList: any[];
   masterFormList: any[] = [];
   isMasterFormLoading= false;
-  registerdUsers = 0;
+  registeredUsers = 0;
   maxUsers = 1000;
   availableUsers = 1000;
   isTenantAdmin = true;
@@ -72,18 +72,18 @@ export class AnelaticsComponent  {
   // }
 
   createNewWorkflowDialog() {
-
+    // TODO: Implement workflow dialog
   }
 
-  openTemplateDialog(type) {
-
+  openTemplateDialog(type: string) {
+    // TODO: Implement template dialog
   }
 
   pickup(masterForm: any) {
-
+    // TODO: Implement pickup functionality
   }
 
   getNavigate(s: string) {
-
+    // TODO: Implement navigation
   }
 }

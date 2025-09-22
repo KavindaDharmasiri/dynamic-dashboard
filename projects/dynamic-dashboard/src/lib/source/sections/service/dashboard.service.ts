@@ -4,7 +4,7 @@ import { SubscriberComponent } from '../component/widgets/subscriber/subscriber.
 import { ViewsComponent } from '../component/widgets/views/views.component';
 import { WatchTimeComponent } from '../component/widgets/watch-time/watch-time.component';
 import { RevenueComponent } from '../component/widgets/revenue/revenue.component';
-import { AnelaticsComponent } from '../component/widgets/anelatics/anelatics.component';
+import { AnalyticsComponent } from '../component/widgets/analytics/analytics.component';
 import { SupersetService } from '../../superset/service/superset.service';
 
 @Injectable()
@@ -15,8 +15,8 @@ export class DashboardService {
 
 
   widgetsToAdd = computed(() => {
-    const addedIds = this.addedWidgets().map(widget => widget.id);
-    return this.widgets().filter(widget => !addedIds.includes(widget.id));
+    const addedIds = new Set(this.addedWidgets().map(widget => widget.id));
+    return this.widgets().filter(widget => !addedIds.has(widget.id));
   });
 
   fetchWidgets() {
@@ -125,7 +125,7 @@ export class DashboardService {
           label: chart.slice_name || `Chart ${chart.id}`,
           content: ViewsComponent,
           rows: 1,
-          columns: 1,
+          cols: 1,
           backgroundColor: '#F7F7F7',
           color: 'black',
           sliceId: chart.id
@@ -145,7 +145,7 @@ export class DashboardService {
             label: 'Failed to load charts',
             content: ViewsComponent,
             rows: 1,
-            columns: 1,
+            cols: 1,
             backgroundColor: '#d32f2f',
             color: 'white',
             sliceId: 0
@@ -180,7 +180,7 @@ export class DashboardService {
           return {
             ...template,           // content, label, sliceId, etc.
             rows: saved.rows,      // ✅ Preserve saved size
-            columns: saved.columns,
+            cols: saved.cols,
             backgroundColor: saved.backgroundColor ?? template.backgroundColor,
             color: saved.color ?? template.color
           };
@@ -215,9 +215,9 @@ export class DashboardService {
       return;
     }
 
-    const insetAt = targetIndex === sourceIndex ? targetIndex + 1 : targetIndex;
+    const insertAt = targetIndex === sourceIndex ? targetIndex + 1 : targetIndex;
 
-    newWidgets.splice(insetAt, 0, sourceWidget);
+    newWidgets.splice(insertAt, 0, sourceWidget);
     this.addedWidgets.set(newWidgets);
   }
 

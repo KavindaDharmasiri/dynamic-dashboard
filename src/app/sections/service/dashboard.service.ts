@@ -17,8 +17,8 @@ export class DashboardService implements OnDestroy {
 
 
   widgetsToAdd = computed(() => {
-    const addedIds = this.addedWidgets().map(widget => widget.id);
-    return this.widgets().filter(widget => !addedIds.includes(widget.id));
+    const addedIds = new Set(this.addedWidgets().map(widget => widget.id));
+    return this.widgets().filter(widget => !addedIds.has(widget.id));
   });
 
   fetchWidgets() {
@@ -142,7 +142,7 @@ export class DashboardService implements OnDestroy {
             label: chart.slice_name || `Chart ${chart.id}`,
             content: ViewsComponent,
             rows: 1,
-            columns: 1,
+            cols: 1,
             backgroundColor: '#F7F7F7',
             color: 'black',
             sliceId: chart.id
@@ -162,7 +162,7 @@ export class DashboardService implements OnDestroy {
             label: 'Failed to load charts',
             content: ViewsComponent,
             rows: 1,
-            columns: 1,
+            cols: 1,
             backgroundColor: '#d32f2f',
             color: 'white',
             sliceId: 0
@@ -198,7 +198,7 @@ export class DashboardService implements OnDestroy {
           return {
             ...template,           // content, label, sliceId, etc.
             rows: saved.rows,      // ✅ Preserve saved size
-            columns: saved.columns,
+            cols: saved.cols,
             backgroundColor: saved.backgroundColor ?? template.backgroundColor,
             color: saved.color ?? template.color
           };
@@ -233,9 +233,9 @@ export class DashboardService implements OnDestroy {
       return;
     }
 
-    const insetAt = targetIndex === sourceIndex ? targetIndex + 1 : targetIndex;
+    const insertAt = targetIndex === sourceIndex ? targetIndex + 1 : targetIndex;
 
-    newWidgets.splice(insetAt, 0, sourceWidget);
+    newWidgets.splice(insertAt, 0, sourceWidget);
     this.addedWidgets.set(newWidgets);
   }
 
@@ -248,8 +248,7 @@ export class DashboardService implements OnDestroy {
     const addedWidgets = this.addedWidgets();
     const indexOfDestWidget = addedWidgets.findIndex(w => w.id === destWidgetId);
     const positionToAdd = indexOfDestWidget === -1 ? addedWidgets.length : indexOfDestWidget;
-    const newWidgets = [...addedWidgets];
-    newWidgets.splice(positionToAdd, 0, widgetToAdd);
-    this.addedWidgets.set(newWidgets);
+    addedWidgets.splice(positionToAdd, 0, widgetToAdd);
+    this.addedWidgets.set(addedWidgets);
   }
 }

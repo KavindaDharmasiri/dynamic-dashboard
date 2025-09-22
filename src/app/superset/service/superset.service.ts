@@ -25,10 +25,10 @@ export class SupersetService {
   getToken() {
     //calling login to get access token
     const body = {
-      "password": "embedding-admin",
+      "password": environment.supersetPassword || 'default-password',
       "provider": "db",
       "refresh": true,
-      "username": "embedding-admin"
+      "username": environment.supersetUsername || 'default-user'
     };
 
     const headers = new HttpHeaders({

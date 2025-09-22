@@ -8,7 +8,7 @@ export * from './lib/source/sections/component/settings/chart-settings/chart-set
 export * from './lib/source/sections/component/widget/widget-options/widget-options.component'; // component
 export * from './lib/source/sections/component/widget/widget-panel/widget-panel.component'; // component
 export * from './lib/source/sections/component/widget/widget.component'; // component
-export * from './lib/source/sections/component/widgets/anelatics/anelatics.component'; // component
+export * from './lib/source/sections/component/widgets/analytics/analytics.component'; // component
 export * from './lib/source/sections/component/widgets/revenue/revenue.component'; // component
 export * from './lib/source/sections/component/widgets/subscriber/subscriber.component'; // component
 export * from './lib/source/sections/component/widgets/views/views.component'; // component

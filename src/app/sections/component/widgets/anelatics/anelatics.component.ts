@@ -16,7 +16,7 @@ export class AnalyticsComponent  {
   masterTemplateList: any[];
   masterFormList: any[] = [];
   isMasterFormLoading= false;
-  registerdUsers = 0;
+  registeredUsers = 0;
   maxUsers = 1000;
   availableUsers = 1000;
   isTenantAdmin = true;

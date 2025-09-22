@@ -93,7 +93,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
   drop(event: CdkDragDrop<number, any>) {
-    console.log('iiii');
+    // Handle widget drop
     const {
       previousContainer,
       container,
@@ -107,9 +107,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   drop2(event: CdkDragDrop<any, any>) {
-
-    console.log('iiii');
-    console.log(event);
+    // Handle widget drop with logging
     const {
       previousContainer,
       container,
@@ -130,7 +128,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   widgetPutBack2(event: CdkDragDrop<any, any>) {
-    console.log(event);
+    // Handle widget put back
     const { previousContainer } = event;
     this.store.removeWidget(previousContainer.data);
   }

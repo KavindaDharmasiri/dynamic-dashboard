@@ -20,6 +20,16 @@ export class ViewsComponent implements OnChanges, OnInit, OnDestroy {
 
   constructor(private sanitizer: DomSanitizer) {}
   
+  private isValidSupersetUrl(url: string): boolean {
+    try {
+      const parsedUrl = new URL(url);
+      const allowedHost = new URL(environment.supersetBaseURL).host;
+      return parsedUrl.host === allowedHost && parsedUrl.pathname.startsWith('/superset/');
+    } catch {
+      return false;
+    }
+  }
+  
   ngOnInit() {
     window.addEventListener('chartSettingsChanged', this.handleChartSettingsChanged.bind(this));
   }
@@ -43,7 +53,10 @@ export class ViewsComponent implements OnChanges, OnInit, OnDestroy {
       const timestamp = Date.now();
       
       this.chartUrl = `${baseUrl}/superset/explore/?form_data=${encoded}&standalone=1&t=${timestamp}`;
-      this.supersetUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.chartUrl);
+      // Validate URL before bypassing sanitization
+      if (this.isValidSupersetUrl(this.chartUrl)) {
+        this.supersetUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.chartUrl);
+      }
     }
   }
 
@@ -54,7 +67,10 @@ export class ViewsComponent implements OnChanges, OnInit, OnDestroy {
       const encoded = encodeURIComponent(JSON.stringify(formData));
 
       this.chartUrl = `${baseUrl}/superset/explore/?form_data=${encoded}&standalone=1`;
-      this.supersetUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.chartUrl);
+      // Validate URL before bypassing sanitization
+      if (this.isValidSupersetUrl(this.chartUrl)) {
+        this.supersetUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.chartUrl);
+      }
     } else {
       this.chartUrl = '';
     }
