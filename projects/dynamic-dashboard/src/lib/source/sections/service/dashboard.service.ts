@@ -117,7 +117,7 @@ export class DashboardService {
   private loadAllChartsAndRestore(): void {
     this.supersetService.getAllCharts().subscribe({
       next: (response) => {
-        const chartResults = response?.result || [];
+        const chartResults = (response as any)?.result || [];
 
         // ✅ 1. Build widgets from Superset charts
         const fetchedWidgets = chartResults.map((chart: any) => ({

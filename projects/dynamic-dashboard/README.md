@@ -1,19 +1,33 @@
-# DynamicDashboard
+# Dynamic Dashboard Library
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.0.
+A powerful Angular library for creating dynamic dashboards with drag-and-drop widgets, built on top of angular-gridster2.
 
-## Code scaffolding
+## Features
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- 🎯 Drag-and-drop widget management
+- 📊 Superset chart integration
+- 🎨 Customizable widget themes
+- 📱 Responsive grid layout
+- 💾 Persistent dashboard state
+- 🔧 Widget configuration panel
+
+## Installation
 
 ```bash
-ng generate component component-name
+npm install dynamic-dashboard
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Usage
 
-```bash
-ng generate --help
+```typescript
+import { DynamicDashboard } from 'dynamic-dashboard';
+
+@Component({
+  selector: 'app-root',
+  imports: [DynamicDashboard],
+  template: '<lib-dynamic-dashboard></lib-dynamic-dashboard>'
+})
+export class AppComponent {}
 ```
 
 ## Building

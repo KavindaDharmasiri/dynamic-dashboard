@@ -5,7 +5,7 @@ export interface Widget {
   label: string;
   content: Type<unknown>;
   rows: number;
-  columns: number;
+  cols: number;
   backgroundColor: string;
   color: string;
   sliceId: number;

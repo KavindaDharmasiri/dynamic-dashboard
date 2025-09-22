@@ -24,7 +24,7 @@ import { ChartSettingsComponent } from '../settings/chart-settings/chart-setting
   styleUrl: './widget.component.css',
   host: {
     '[style.grid-area]':
-      '"span " + (data().rows || 1) + " / span " + (data().columns || 1)'
+      '"span " + (data().rows || 1) + " / span " + (data().cols || 1)'
   }
 })
 export class WidgetComponent {

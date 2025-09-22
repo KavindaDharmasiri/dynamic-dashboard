@@ -1,9 +1,18 @@
 {
   "name": "dynamic-dashboard",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Angular dynamic dashboard library with gridster integration",
+  "keywords": ["angular", "dashboard", "gridster", "widgets", "dynamic"],
+  "author": "Kavinda_d",
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^20.1.0",
-    "@angular/core": "^20.1.0"
+    "@angular/core": "^20.1.0",
+    "@angular/material": "^20.1.0",
+    "@angular/cdk": "^20.1.0",
+    "angular-gridster2": "^20.0.0",
+    "@superset-ui/embedded-sdk": "^0.1.0",
+    "animate-css-grid": "^1.5.1"
   },
   "dependencies": {
     "tslib": "^2.3.0"
