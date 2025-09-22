@@ -84,13 +84,80 @@ import { ChartSettingsComponent } from '../component/settings/chart-settings/cha
       justify-content: center;
       color: rgba(99, 102, 241, 0.7);
       font-weight: 500;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
       animation: pulse 1.5s infinite;
+      transform: scale(0.95);
+    }
+    
+    .cdk-drag-preview {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      transform: rotate(5deg);
+      transition: transform 0.2s ease;
+      opacity: 0.9;
+    }
+    
+    .cdk-drag-placeholder {
+      opacity: 0.3;
+      transform: scale(0.9);
+      transition: all 0.3s ease;
+    }
+    
+    .cdk-drop-list-receiving {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+      transition: all 0.3s ease;
     }
     
     @keyframes pulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.8; }
+      0%, 100% { opacity: 0.5; transform: scale(0.95); }
+      50% { opacity: 0.8; transform: scale(1); }
+    }
+    
+    @keyframes dropZoneGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); }
+      50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+    }
+    
+    .drop-zone {
+      min-height: 40px;
+      opacity: 0.3;
+      border: 1px dashed rgba(99, 102, 241, 0.2);
+      border-radius: 4px;
+      margin: 4px 0;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      &.cdk-drop-list-receiving {
+        opacity: 1;
+        min-height: 80px;
+        background: rgba(99, 102, 241, 0.1);
+        border: 2px dashed rgba(99, 102, 241, 0.8);
+        border-radius: 8px;
+        animation: pulse 1s infinite;
+      }
+    }
+    
+    .end-drop-zone {
+      grid-column: 1 / -1;
+      min-height: 80px;
+      border: 2px dashed rgba(99, 102, 241, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: rgba(99, 102, 241, 0.6);
+      background: rgba(99, 102, 241, 0.02);
+      transition: all 0.3s ease;
+      
+      &.cdk-drop-list-receiving {
+        border-color: rgba(99, 102, 241, 0.8);
+        background: rgba(99, 102, 241, 0.1);
+        transform: scale(1.02);
+      }
     }
     
     app-widget {
@@ -191,17 +258,46 @@ import { ChartSettingsComponent } from '../component/settings/chart-settings/cha
       }
       
       mat-button-toggle {
-        width: 28px;
-        height: 28px;
+        width: 36px;
+        height: 36px;
         border: none;
-        background: transparent;
+        background: rgba(255, 255, 255, 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 10px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          opacity: 0;
+          transition: all 0.3s ease;
+          border-radius: 10px;
+        }
+        
+        &:hover:not(.mat-button-toggle-checked) {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
         
         &.mat-button-toggle-checked {
-          background: var(--primary);
+          background: transparent;
           color: white;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+          
+          &::before {
+            opacity: 1;
+          }
         }
         
         .mat-button-toggle-label-content {
@@ -210,34 +306,49 @@ import { ChartSettingsComponent } from '../component/settings/chart-settings/cha
           justify-content: center;
           padding: 0;
           line-height: 1;
+          position: relative;
+          z-index: 1;
         }
         
         mat-icon {
-          font-size: 14px;
-          width: 14px;
-          height: 14px;
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
           margin: 0;
+          transition: all 0.2s ease;
         }
       }
     }
 
     .empty-drop-zone {
-      min-height: 200px;
-      border: 2px dashed var(--outline);
-      border-radius: var(--radius);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      min-height: 400px;
+      border: 2px dashed rgba(99, 102, 241, 0.3);
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: var(--on-surface-variant);
+      color: rgba(99, 102, 241, 0.6);
       padding: 2rem;
-      background: var(--surface);
-      transition: var(--transition);
+      background: rgba(99, 102, 241, 0.05);
+      transition: all 0.3s ease;
+      z-index: -1;
       
-      &:hover {
-        border-color: var(--primary);
-        background: var(--surface-variant);
+      &.cdk-drop-list-receiving,
+      &.drag-over {
+        border-color: rgba(99, 102, 241, 0.8);
+        background: rgba(99, 102, 241, 0.1);
+        z-index: 1;
       }
+    }
+    
+    .dashboard-widgets {
+      position: relative;
     }
 
     .empty-drop-zone mat-icon {
@@ -300,15 +411,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const { previousContainer, container, item } = event;
     const widgetId = item.data;
     
+    console.log('Drop2 called:', { widgetId, previousContainer, container });
+    
     if (previousContainer !== container && widgetId) {
       const widget = this.store.widgets().find(w => w.id === widgetId);
+      console.log('Found widget:', widget);
       if (widget) {
         this.store.addWidget(widget);
+        console.log('Widget added');
       }
     }
+    this.isDragOver = false;
   }
 
   widgetsOpen = signal(false);
+  isDragOver = false;
 
   widgetPutBack(event: CdkDragDrop<number, any>) {
     const { previousContainer } = event;
@@ -332,6 +449,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private getStoredMode(): 'view' | 'edit' {
     const stored = localStorage.getItem('dashboardMode');
     return (stored === 'view' || stored === 'edit') ? stored : 'edit';
+  }
+  
+  insertAt(event: CdkDragDrop<any, any>, position: number) {
+    const { previousContainer, container, item } = event;
+    const widgetId = item.data;
+    
+    if (previousContainer !== container && widgetId) {
+      const widget = this.store.widgets().find(w => w.id === widgetId);
+      if (widget) {
+        const newWidgets = [...this.store.addedWidgets()];
+        newWidgets.splice(position, 0, widget);
+        this.store.addedWidgets.set(newWidgets);
+      }
+    }
   }
   
   refreshWidgetData(sliceId: number) {

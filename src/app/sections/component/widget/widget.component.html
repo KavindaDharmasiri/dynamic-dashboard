@@ -5,11 +5,17 @@ cdkDragPreviewContainer="parent">
   @if (!data().hideTitle) {
     <h3 class="m-0">{{data().label}}</h3>
   }
-  <button *ngIf="mode === 'edit'" mat-icon-button class="setting-buttons" (click)="showOptions.set(true)" [style.color]="data().color ?? 'inherit'">
-    <mat-icon>settings</mat-icon>
-  </button>
-
-  <button *ngIf="mode === 'edit'" (click)="openChartSettings()">⚙️ Settings</button>
+  <div class="widget-controls" *ngIf="mode === 'edit'">
+    <button mat-icon-button class="delete-widget" (click)="store.removeWidget(data().id)" title="Delete Widget">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-icon-button class="widget-settings" (click)="showOptions.set(true)" title="Widget Settings">
+      <mat-icon>tune</mat-icon>
+    </button>
+    <button mat-icon-button class="chart-settings" (click)="openChartSettings()" title="Chart Settings">
+      <mat-icon>bar_chart</mat-icon>
+    </button>
+  </div>
   <ng-container [ngComponentOutlet]="data().content"
                 [ngComponentOutletInputs]="{ sliceId: data().sliceId }"/>
 

@@ -1,58 +1,124 @@
-:host{
+:host {
   position: absolute;
-  z-index: 2;
-  background: whitesmoke;
-  color: black;
+  z-index: 10;
   top: 0;
   left: 0;
-  border-radius: inherit;
   width: 100%;
   height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
+}
 
+.settings-panel {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 8px;
+  backdrop-filter: blur(10px);
+  overflow-y: auto;
+  min-height: 200px;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  box-sizing: border-box;
-
-  --mat-standard-button-toggle-height: 16px;
-
-  > div {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 8px;
-  }
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 8px;
 }
 
-.close-button{
-  position: absolute;
-  top: 0;
-  right: 0;
+.settings-header h4 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 16px;
 }
 
-.move-forward-button{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: -5px;
+.close-button {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
 
-.move-backward-button{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: -5px;
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
-.remove-widget-button{
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: #cc0000;
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.9;
 }
-.cdk-drop-list-dragging{
-  opacity: 0.5;
-  border-left: 5px solid #000;
-  padding-left: 8px;
+
+.section-label mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.size-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.size-toggle mat-button-toggle {
+  border: none;
+  background: transparent;
+  color: white;
+  border-radius: 6px;
+  min-width: 32px;
+  height: 32px;
+}
+
+.size-toggle mat-button-toggle.mat-button-toggle-checked {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.title-toggle {
+  color: white;
+}
+
+.settings-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-start;
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  height: 28px;
+  font-size: 11px;
+  padding: 0 8px;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.delete-btn:hover {
+  background: rgba(244, 67, 54, 0.2);
+  border-color: #f44336;
+  color: #ffcdd2;
 }

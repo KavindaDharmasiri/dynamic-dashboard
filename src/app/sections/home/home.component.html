@@ -12,11 +12,9 @@
         aria-label="Dashboard mode">
         <mat-button-toggle value="view">
           <mat-icon>visibility</mat-icon>
-          View
         </mat-button-toggle>
         <mat-button-toggle value="edit">
           <mat-icon>edit</mat-icon>
-          Edit
         </mat-button-toggle>
       </mat-button-toggle-group>
 
@@ -65,7 +63,8 @@
     @for (w of store.addedWidgets(); track w.id) {
       <app-widget cdkDropList [data]="w" [mode]="viewMode()" (cdkDropListDropped)="drop($event)" [cdkDropListData]="w.id" [cdkDropListDisabled]="viewMode() === 'view'" cdkDropListSortingDisabled>
         <div *cdkDragPlaceholder class="drop-placeholder">
-          Drop here
+          <mat-icon>swap_horiz</mat-icon>
+          <span>Drop here to replace</span>
         </div>
       </app-widget>
     }
@@ -76,17 +75,30 @@
          cdkDropList
          [cdkDropListData]="-1"
          (cdkDropListDropped)="drop2($event)"
+         (cdkDropListEntered)="isDragOver = true"
+         (cdkDropListExited)="isDragOver = false"
     >
-      @for (w of store.addedWidgets(); track w.id) {
+      @for (w of store.addedWidgets(); track w.id; let i = $index) {
         <app-widget cdkDrag [data]="w" [mode]="viewMode()" [cdkDragData]="w.id" />
+        <div class="drop-zone" cdkDropList [cdkDropListData]="i + 0.5" (cdkDropListDropped)="insertAt($event, i + 1)" cdkDropListSortingDisabled>
+          <span class="drop-text">Drop between widgets</span>
+          <div *cdkDragPlaceholder class="drop-placeholder">
+            <mat-icon>add_circle</mat-icon>
+            <span>Drop here</span>
+          </div>
+        </div>
       }
-      <div class="empty-drop-zone">
+      <div class="end-drop-zone" cdkDropList [cdkDropListData]="store.addedWidgets().length" (cdkDropListDropped)="insertAt($event, store.addedWidgets().length)" cdkDropListSortingDisabled>
+        <mat-icon>add_box</mat-icon>
+        <span>Drop widget at end</span>
+        <div *cdkDragPlaceholder class="drop-placeholder">
+          <mat-icon>add_circle</mat-icon>
+          <span>Drop here</span>
+        </div>
+      </div>
+      <div class="empty-drop-zone" [class.drag-over]="isDragOver">
         <mat-icon>add_box</mat-icon>
         <span>Drag a widget here</span>
-      </div>
-      <div *cdkDragPlaceholder class="drop-placeholder">
-        <mat-icon>add_circle</mat-icon>
-        <span>Drop widget here</span>
       </div>
     </div>
   }
