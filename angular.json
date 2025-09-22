@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/demo",
+            "outputPath": "dist/angular-gridster2",
             "index": "src/index.html",
             "polyfills": [
               "zone.js"
@@ -47,7 +47,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumError": "20kB"
                 }
               ],
               "outputHashing": "all"
@@ -112,46 +112,6 @@
               "src/**/*.ts",
               "src/**/*.html"
             ]
-          }
-        }
-      }
-    },
-    "angular-gridster2": {
-      "projectType": "library",
-      "root": "projects/angular-gridster2",
-      "sourceRoot": "projects/angular-gridster2/src",
-      "prefix": "gridster",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:ng-packagr",
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/angular-gridster2/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/angular-gridster2/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "tsConfig": "projects/angular-gridster2/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "projects/angular-gridster2/**/*.ts",
-              "projects/angular-gridster2/**/*.html"
-            ],
-            "eslintConfig": "projects/angular-gridster2/eslint.config.js"
           }
         }
       }

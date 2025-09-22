@@ -25,7 +25,6 @@ export const appConfig: ApplicationConfig = {
           useValue: { breaks: true }
         }
       })
-    ),
-    provideAnimationsAsync()
+    )
   ]
 };

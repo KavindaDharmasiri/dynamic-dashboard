@@ -11,7 +11,7 @@ import { NgIf } from '@angular/common';
 export class RevenueComponent {
   isApproval = true;
   approveCount = 8;
-  isInprogress = true;
+  isInProgress = true;
   inProgressCount = 5;
   isCompleted = true;
   completedCount = 12;

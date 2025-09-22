@@ -1,5 +1,6 @@
 
-<div cdkDropListGroup  >
+<div cdkDropListGroup>
+  @if (viewMode() === 'edit') {
   <div class="header">
     <h2>Channel dashboard</h2>
 
@@ -9,8 +10,14 @@
         [value]="viewMode()"
         (valueChange)="onModeChange($event)"
         aria-label="Dashboard mode">
-        <mat-button-toggle value="view">View</mat-button-toggle>
-        <mat-button-toggle value="edit">Edit</mat-button-toggle>
+        <mat-button-toggle value="view">
+          <mat-icon>visibility</mat-icon>
+          View
+        </mat-button-toggle>
+        <mat-button-toggle value="edit">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </mat-button-toggle>
       </mat-button-toggle-group>
 
     </div>
@@ -26,15 +33,7 @@
       }
       widget
     </button>
-    @if (widgetsOpen() && viewMode() == 'edit'){
-      <app-widget-panel
-        cdkDropList
-        [cdkDropListDisabled]="viewMode() === 'view'"
-        [cdkDragDisabled]="viewMode() === 'view'"
-        (cdkDropListDropped)="widgetPutBack($event)"
-        cdkDrag
-      />
-    }
+
     <mat-menu #widgetmenu="matMenu">
       @for (widget of store.widgetsToAdd(); track widget.id) {
         <button mat-menu-item (click)="store.addWidget(widget)">
@@ -47,6 +46,20 @@
       }
     </mat-menu>
   </div>
+  } @else {
+    <div class="view-toggle">
+      <mat-button-toggle-group
+        [value]="viewMode()"
+        (valueChange)="onModeChange($event)">
+        <mat-button-toggle value="view">
+          <mat-icon>visibility</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="edit">
+          <mat-icon>edit</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  }
   @if (store.addedWidgets().length > 0){
   <div #dashboard class="dashboard-widgets" >
     @for (w of store.addedWidgets(); track w.id) {
@@ -69,4 +82,16 @@
       </div>
     </div>
   }
+  
+  @if (widgetsOpen() && viewMode() == 'edit'){
+    <app-widget-panel
+      cdkDropList
+      [cdkDropListDisabled]="viewMode() === 'view'"
+      [cdkDragDisabled]="viewMode() === 'view'"
+      (cdkDropListDropped)="widgetPutBack($event)"
+      cdkDrag
+    />
+  }
+  
+  <app-chart-settings #chartSettings></app-chart-settings>
 </div>

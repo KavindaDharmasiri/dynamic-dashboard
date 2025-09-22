@@ -5,6 +5,7 @@ import { WidgetOptionsComponent } from './widget-options/widget-options.componen
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
+import { ChartSettingsComponent } from '../settings/chart-settings/chart-settings.component';
 
 @Component({
   selector: 'app-widget',
@@ -15,14 +16,17 @@ import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
     MatIconButton,
     CdkDrag,
     CdkDragPlaceholder,
-    NgIf
+    NgIf,
+    ChartSettingsComponent
   ],
   templateUrl: './widget.component.html',
   standalone: true,
   styleUrl: './widget.component.css',
   host: {
-    '[style.grid-area]':
-      '"span " + (data().rows || 1) + " / span " + (data().columns || 1)'
+    '[attr.data-cols]': 'data().columns || 1',
+    '[attr.data-rows]': 'data().rows || 1',
+    '[style.grid-column]': '"span " + (data().columns || 1)',
+    '[style.grid-row]': '"span " + (data().rows || 1)'
   }
 })
 export class WidgetComponent {
@@ -30,4 +34,11 @@ export class WidgetComponent {
 
   showOptions = signal(false);
   @Input() mode!: 'view' | 'edit';
+  
+  openChartSettings() {
+    // Emit event to parent to open chart settings
+    window.dispatchEvent(new CustomEvent('openChartSettings', { 
+      detail: { sliceId: this.data().sliceId } 
+    }));
+  }
 }

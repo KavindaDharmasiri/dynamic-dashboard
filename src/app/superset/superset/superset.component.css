@@ -1,0 +1,10 @@
+iframe {
+  height: 100vh;
+  width: 100vw;
+
+}
+#superset_embedding_div_class iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none;
+}

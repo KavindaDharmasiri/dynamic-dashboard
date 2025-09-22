@@ -1,0 +1,6 @@
+<div class="modal" *ngIf="visible">
+  <div class="modal-content">
+    <span class="close" (click)="close()">&times;</span>
+    <iframe [src]="chartUrl | safe" width="100%" height="800" frameborder="0" scrolling="yes"></iframe>
+  </div>
+</div>

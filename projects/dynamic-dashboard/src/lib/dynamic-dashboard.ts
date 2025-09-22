@@ -1,15 +1,11 @@
 import { Component } from '@angular/core';
+import { AppComponent } from './source/app.component';
 
 @Component({
   selector: 'lib-dynamic-dashboard',
-  imports: [],
-  template: `
-    <p>
-      dynamic-dashboard works!
-    </p>
-  `,
+  imports: [AppComponent],
+  template: ` <app-root></app-root> `,
+  standalone: true,
   styles: ``
 })
-export class DynamicDashboard {
-
-}
+export class DynamicDashboard {}

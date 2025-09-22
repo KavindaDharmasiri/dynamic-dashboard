@@ -1,40 +1,98 @@
 :host {
-  background: #80A9F1 ;
-  color: #1B154A;
-  position: absolute;
-  right: 0;
-  top: 100px;
-  width: 200px;
-  z-index: 2;
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: var(--blur);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--shadow-xl);
+  position: fixed;
+  right: 2rem;
+  top: 7rem;
+  width: 320px;
+  z-index: 10000;
+  border-radius: var(--radius-lg);
+  animation: slideIn 0.3s ease-out;
+  isolation: isolate;
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+}
+
+.widget-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--outline);
+  background: var(--surface-variant);
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--on-surface);
+  }
+  
+  mat-icon {
+    color: var(--primary);
+  }
+  
+  button {
+    background: white;
+    color: var(--primary);
+    border: 1px solid var(--outline);
+    
+    &:hover {
+      background: var(--surface-variant);
+      color: var(--primary-dark);
+    }
+  }
+}
+
+.widget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .widget-box {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  background: #EEEDF2;
-  color: black;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--surface-variant);
+  border: 1px solid transparent;
+  color: var(--on-surface);
   cursor: pointer;
-  padding: 8px 16px 8px 16px;
-  font-size: 0.8rem;
-}
-
-.widget-box:hover {
-  background: #d8e5fa;
-}
-
-.widget-list{
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 16px;
-  border-radius: 8px;
-}
-
-.widget-panel-header {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: var(--transition);
+  
+  &:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    transform: translateX(4px);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
 }

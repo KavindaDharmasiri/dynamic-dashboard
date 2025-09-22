@@ -1,0 +1,9 @@
+<div class="modal" *ngIf="visible">
+  <div class="modal-content">
+    <span class="close" (click)="close()">&times;</span>
+    <iframe [src]="chartUrl | safe" frameborder="0" scrolling="yes"></iframe>
+    <div class="modal-actions">
+      <button mat-raised-button color="primary" (click)="close()">Close</button>
+    </div>
+  </div>
+</div>

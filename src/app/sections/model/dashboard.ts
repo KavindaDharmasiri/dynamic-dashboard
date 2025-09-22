@@ -4,8 +4,12 @@ export interface Widget {
   id: number;
   label: string;
   content: Type<unknown>;
-  rows?: number;
-  columns?: number;
-  backgroundColor?: string;
-  color?: string;
+  rows: number;
+  columns: number;
+  backgroundColor: string;
+  color: string;
+  sliceId: number;
+  x?: number;
+  y?: number;
+  hideTitle?: boolean;
 }

@@ -1,11 +1,17 @@
-<div class="container mat-elevation-z3" [style.background-color]="data().backgroundColor ?? 'white'" [style.color]="data().color ?? 'inherit'"
+<div class="container mat-elevation-z3
+" [style.background-color]="data().backgroundColor ?? 'white'" [style.color]="data().color ?? 'inherit'"
 cdkDrag
 cdkDragPreviewContainer="parent">
-  <h3 class="m-0">{{data().label}}</h3>
+  @if (!data().hideTitle) {
+    <h3 class="m-0">{{data().label}}</h3>
+  }
   <button *ngIf="mode === 'edit'" mat-icon-button class="setting-buttons" (click)="showOptions.set(true)" [style.color]="data().color ?? 'inherit'">
     <mat-icon>settings</mat-icon>
   </button>
-  <ng-container [ngComponentOutlet]="data().content"/>
+
+  <button *ngIf="mode === 'edit'" (click)="openChartSettings()">⚙️ Settings</button>
+  <ng-container [ngComponentOutlet]="data().content"
+                [ngComponentOutletInputs]="{ sliceId: data().sliceId }"/>
 
   @if (showOptions() && mode === 'edit'){
     <app-widget-options [(showOptions)]="showOptions" [data]="data()"/>

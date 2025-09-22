@@ -15,11 +15,19 @@
     "target": "ES2022",
     "module": "preserve",
     "paths": {
+      "ang-gridster": [
+        "./dist/ang-gridster"
+      ],
+      "ang-gridster2": [
+        "./dist/ang-gridster2"
+      ],
       "angular-gridster2": [
         "./dist/angular-gridster2",
         "./projects/angular-gridster2/src/public_api.ts"
       ],
       "dynamic-dashboard": [
+        "./dist/dynamic-dashboard",
+        "./dist/dynamic-dashboard",
         "./dist/dynamic-dashboard",
         "./dist/dynamic-dashboard"
       ]
@@ -39,6 +47,30 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/dynamic-dashboard/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/dynamic-dashboard/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/dynamic-dashboard/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/dynamic-dashboard/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ang-gridster2/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ang-gridster2/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ang-gridster/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ang-gridster/tsconfig.spec.json"
     },
     {
       "path": "./projects/dynamic-dashboard/tsconfig.lib.json"
