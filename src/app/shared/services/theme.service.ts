@@ -13,11 +13,11 @@ export interface ThemeConfig {
 })
 export class ThemeService {
   private defaultTheme: ThemeConfig = {
-    primaryColor: '#667eea',
-    secondaryColor: '#764ba2',
-    backgroundColor: '#ffffff',
-    textColor: '#333333',
-    accentColor: '#f093fb'
+    primaryColor: '#6366F1',
+    secondaryColor: '#C7D2FE',
+    backgroundColor: '#F9FAFB',
+    textColor: '#6E7583',
+    accentColor: '#CCE5FF'
   };
 
   currentTheme = signal<ThemeConfig>(this.loadTheme());
@@ -65,6 +65,28 @@ export class ThemeService {
     root.style.setProperty('--theme-background', theme.backgroundColor);
     root.style.setProperty('--theme-text', theme.textColor);
     root.style.setProperty('--theme-accent', theme.accentColor);
+    
+    // Convert hex to RGB for rgba usage
+    const hexToRgb = (hex: string) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    };
+    
+    const primaryRgb = hexToRgb(theme.primaryColor);
+    const secondaryRgb = hexToRgb(theme.secondaryColor);
+    const backgroundRgb = hexToRgb(theme.backgroundColor);
+    const textRgb = hexToRgb(theme.textColor);
+    const accentRgb = hexToRgb(theme.accentColor);
+    
+    if (primaryRgb) root.style.setProperty('--theme-primary-rgb', `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}`);
+    if (secondaryRgb) root.style.setProperty('--theme-secondary-rgb', `${secondaryRgb.r}, ${secondaryRgb.g}, ${secondaryRgb.b}`);
+    if (backgroundRgb) root.style.setProperty('--theme-background-rgb', `${backgroundRgb.r}, ${backgroundRgb.g}, ${backgroundRgb.b}`);
+    if (textRgb) root.style.setProperty('--theme-text-rgb', `${textRgb.r}, ${textRgb.g}, ${textRgb.b}`);
+    if (accentRgb) root.style.setProperty('--theme-accent-rgb', `${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}`);
   }
 
   updateTheme(updates: Partial<ThemeConfig>) {
@@ -79,7 +101,13 @@ export class ThemeService {
     return [
       {
         name: 'Default',
-        theme: this.defaultTheme
+        theme: {
+          primaryColor: '#6366F1',
+          secondaryColor: '#C7D2FE',
+          backgroundColor: '#F9FAFB',
+          textColor: '#6E7583',
+          accentColor: '#CCE5FF'
+        }
       },
       {
         name: 'Ocean Blue',

@@ -44,7 +44,7 @@ import { ThemeSettingsComponent } from '../../shared/components/theme-settings.c
     :host {
       display: block;
       padding: 2rem;
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      background: linear-gradient(135deg, var(--theme-background, #f8fafc) 0%, #e2e8f0 100%);
       min-height: 100vh;
       position: relative;
       
@@ -74,7 +74,7 @@ import { ThemeSettingsComponent } from '../../shared/components/theme-settings.c
       animation: dashboardSlideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       
       &.cdk-drop-list-receiving {
-        background: rgba(99, 102, 241, 0.05);
+        background: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.05);
         border-radius: var(--radius-lg);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         transform: scale(1.01);
@@ -245,7 +245,7 @@ import { ThemeSettingsComponent } from '../../shared/components/theme-settings.c
       justify-content: space-between;
       align-items: center;
       padding: 1.5rem 2rem;
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(var(--theme-background-rgb, 255, 255, 255), 0.8);
       backdrop-filter: var(--blur);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: var(--radius-lg);
@@ -281,7 +281,7 @@ import { ThemeSettingsComponent } from '../../shared/components/theme-settings.c
       &:hover {
         box-shadow: var(--shadow-xl);
         transform: translateY(-4px) scale(1.01);
-        border-color: rgba(99, 102, 241, 0.3);
+        border-color: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.3);
       }
     }
     
