@@ -63,6 +63,8 @@ import { ToastComponent } from '../../shared/components/toast.component';
                 <span class="widget-count">{{ template.widgets.length }} widgets</span>
                 @if (template.isPublished) {
                   <span class="published-badge">Published</span>
+                } @else {
+                  <span class="draft-badge">Draft</span>
                 }
               </div>
               <div class="template-dates">
@@ -144,6 +146,15 @@ import { ToastComponent } from '../../shared/components/toast.component';
 
     .published-badge {
       background: var(--theme-primary, #6366F1);
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .draft-badge {
+      background: #6b7280;
       color: white;
       padding: 0.25rem 0.5rem;
       border-radius: 12px;

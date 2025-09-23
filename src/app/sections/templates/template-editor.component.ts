@@ -55,11 +55,6 @@ import { wrapGrid } from 'animate-css-grid';
           <button mat-icon-button (click)="themeSettings.open()" title="Theme Settings">
             <mat-icon>palette</mat-icon>
           </button>
-          <button mat-raised-button color="primary" (click)="saveTemplate()">
-            <mat-icon>save</mat-icon>
-            Save Template
-          </button>
-          <button mat-button (click)="cancel()">Cancel</button>
         </div>
       </div>
 
@@ -87,6 +82,17 @@ import { wrapGrid } from 'animate-css-grid';
         @if (widgetsOpen()) {
           <app-widget-panel cdkDropList cdkDrag (cdkDropListDropped)="widgetPutBack($event)" />
         }
+        
+        <div class="bottom-buttons">
+          <button mat-button class="exit-btn" (click)="cancel()">
+            <mat-icon>exit_to_app</mat-icon>
+            Exit
+          </button>
+          <button mat-raised-button color="primary" (click)="saveTemplate()">
+            <mat-icon>save</mat-icon>
+            Save
+          </button>
+        </div>
       </div>
       
       <app-theme-settings #themeSettings></app-theme-settings>
@@ -265,6 +271,43 @@ import { wrapGrid } from 'animate-css-grid';
     @media (max-width: 600px) {
       .dashboard-widgets {
         grid-template-columns: 1fr;
+      }
+    }
+
+    .bottom-buttons {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 2rem;
+      gap: 1rem;
+      
+      .exit-btn {
+        background: #ef4444 !important;
+        color: white !important;
+        
+        &:hover {
+          background: #dc2626 !important;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+      }
+      
+      button {
+        transition: all 0.2s ease;
+        
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+      }
+      
+      .mat-mdc-raised-button {
+        background: var(--theme-primary, #6366f1) !important;
+        color: white !important;
+        
+        &:hover {
+          background: var(--theme-accent, #4f46e5) !important;
+        }
       }
     }
   `]
@@ -493,6 +536,10 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   }
 
   cancel() {
+    // Set template to draft status (unpublished) when exiting
+    if (this.templateId) {
+      this.templateService.unpublishTemplate(this.templateId);
+    }
     this.restorePublishedTheme();
     this.router.navigate(['/templates']);
   }

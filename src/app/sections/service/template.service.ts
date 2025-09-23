@@ -87,6 +87,13 @@ export class TemplateService {
     return { success: true, message: 'Template published successfully!', templateName: template.name };
   }
 
+  unpublishTemplate(id: string): void {
+    this.templates.update(templates => 
+      templates.map(t => t.id === id ? { ...t, isPublished: false } : t)
+    );
+    this.saveTemplates();
+  }
+
   saveCurrentDashboardAsTemplate(name: string, description: string, widgets: TemplateWidget[]): DashboardTemplate {
     return this.createTemplate(name, description, widgets);
   }
