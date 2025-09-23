@@ -18,6 +18,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ChartSettingsComponent } from '../component/settings/chart-settings/chart-settings.component';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog.component';
 import { ThemeSettingsComponent } from '../../shared/components/theme-settings.component';
+import { StorageService } from '../../shared/services/storage.service';
 
 
 @Component({
@@ -277,11 +278,59 @@ import { ThemeSettingsComponent } from '../../shared/components/theme-settings.c
           transform: scale(1.1);
         }
       }
+    }
+    
+    .header-left {
+      flex: 1;
       
-      &:hover {
-        box-shadow: var(--shadow-xl);
-        transform: translateY(-4px) scale(1.01);
-        border-color: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.3);
+      h2 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, var(--theme-primary, #6366F1) 0%, var(--theme-text, #6E7583) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    }
+    
+    .header-center {
+      flex: 0 0 auto;
+    }
+    
+    .header-right {
+      flex: 0 0 auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .header-action-btn {
+      width: 36px;
+      height: 36px;
+      background: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.08);
+      color: var(--theme-primary, #6366F1);
+      border: 1px solid rgba(var(--theme-primary-rgb, 99, 102, 241), 0.15);
+      border-radius: 10px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+      
+      &:hover:not(:disabled) {
+        background: var(--theme-primary, #6366F1);
+        color: white;
+        transform: translateY(-1px) scale(1.05);
+        box-shadow: 0 4px 12px rgba(var(--theme-primary-rgb, 99, 102, 241), 0.3);
+        border-color: var(--theme-primary, #6366F1);
+      }
+      
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
       }
     }
     
@@ -392,29 +441,36 @@ import { ThemeSettingsComponent } from '../../shared/components/theme-settings.c
     }
 
     .empty-drop-zone {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
       min-height: 400px;
-      border: 2px dashed rgba(99, 102, 241, 0.3);
+      border: 2px dashed rgba(var(--theme-primary-rgb, 99, 102, 241), 0.3);
       border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: rgba(99, 102, 241, 0.6);
+      color: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.6);
       padding: 2rem;
-      background: rgba(99, 102, 241, 0.05);
+      background: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.05);
       transition: all 0.3s ease;
-      z-index: -1;
       
       &.cdk-drop-list-receiving,
       &.drag-over {
-        border-color: rgba(99, 102, 241, 0.8);
-        background: rgba(99, 102, 241, 0.1);
-        z-index: 1;
+        border-color: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.8);
+        background: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.1);
+      }
+      
+      mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        margin-bottom: 1rem;
+        color: var(--theme-primary, #6366F1);
+        opacity: 0.5;
+      }
+      
+      span {
+        font-size: 1rem;
+        font-weight: 500;
       }
     }
     
@@ -433,6 +489,140 @@ import { ThemeSettingsComponent } from '../../shared/components/theme-settings.c
     .empty-drop-zone span {
       font-size: 1rem;
       font-weight: 500;
+    }
+    
+    .floating-mode-trigger-top {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 60px;
+      z-index: 999;
+      pointer-events: auto;
+    }
+    
+    .floating-mode-selector {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px) scale(0.9);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      
+      mat-button-toggle-group {
+        background: rgba(var(--theme-background-rgb, 255, 255, 255), 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(var(--theme-primary-rgb, 99, 102, 241), 0.2);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        padding: 4px;
+      }
+      
+      mat-button-toggle {
+        width: 40px;
+        height: 36px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        
+        &.mat-button-toggle-checked {
+          background: var(--theme-primary, #6366F1);
+          color: white;
+          box-shadow: 0 2px 8px rgba(var(--theme-primary-rgb, 99, 102, 241), 0.3);
+        }
+        
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+    
+    .floating-mode-trigger-top:hover + .floating-mode-selector,
+    .floating-mode-selector:hover {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    
+    .loading-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      padding: 2rem;
+    }
+    
+    .loading-spinner {
+      text-align: center;
+      
+      .spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid rgba(var(--theme-primary-rgb, 99, 102, 241), 0.1);
+        border-left-color: var(--theme-primary, #6366F1);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1.5rem;
+      }
+      
+      h3 {
+        margin: 0 0 0.5rem 0;
+        color: var(--theme-text, #6E7583);
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      
+      p {
+        margin: 0;
+        color: var(--theme-text, #6E7583);
+        opacity: 0.7;
+        font-size: 0.875rem;
+      }
+    }
+    
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      padding: 2rem;
+      text-align: center;
+      color: var(--theme-text, #6E7583);
+      opacity: 0.7;
+      
+      mat-icon {
+        font-size: 4rem;
+        width: 4rem;
+        height: 4rem;
+        margin-bottom: 1rem;
+        color: var(--theme-primary, #6366F1);
+        opacity: 0.5;
+      }
+      
+      h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      
+      p {
+        margin: 0;
+        font-size: 0.875rem;
+        opacity: 0.8;
+      }
     }
   `
 })
@@ -509,18 +699,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.store.removeWidget(previousContainer.data);
   }
 
-  // Add this signal
-  viewMode = signal<'view' | 'edit'>(this.getStoredMode());
+  private storageService = inject(StorageService);
+  
+  viewMode = signal<'view' | 'edit'>(this.storageService.config().mode);
 
-// Optional: React to mode changes
   onModeChange(mode: 'view' | 'edit') {
     this.viewMode.set(mode);
-    localStorage.setItem('dashboardMode', mode);
-  }
-  
-  private getStoredMode(): 'view' | 'edit' {
-    const stored = localStorage.getItem('dashboardMode');
-    return (stored === 'view' || stored === 'edit') ? stored : 'edit';
+    this.storageService.updateMode(mode);
   }
   
   insertAt(event: CdkDragDrop<any, any>, position: number) {

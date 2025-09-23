@@ -1,4 +1,5 @@
-import { Injectable, signal, effect } from '@angular/core';
+import { Injectable, signal, effect, inject } from '@angular/core';
+import { StorageService } from './storage.service';
 
 export interface ThemeConfig {
   primaryColor: string;
@@ -12,51 +13,26 @@ export interface ThemeConfig {
   providedIn: 'root'
 })
 export class ThemeService {
-  private defaultTheme: ThemeConfig = {
-    primaryColor: '#6366F1',
-    secondaryColor: '#C7D2FE',
-    backgroundColor: '#F9FAFB',
-    textColor: '#6E7583',
-    accentColor: '#CCE5FF'
-  };
-
-  currentTheme = signal<ThemeConfig>(this.loadTheme());
+  private storageService = inject(StorageService);
+  
+  currentTheme = signal<ThemeConfig>(this.storageService.config().theme);
 
   constructor() {
+    // Migrate old storage on first load
+    this.storageService.migrateOldStorage();
+    
     // Apply theme when it changes
     effect(() => {
       this.applyTheme(this.currentTheme());
-      this.saveTheme(this.currentTheme());
+    });
+    
+    // Listen to storage changes
+    effect(() => {
+      this.currentTheme.set(this.storageService.config().theme);
     });
   }
 
-  private loadTheme(): ThemeConfig {
-    const saved = localStorage.getItem('dashboardTheme');
-    if (saved) {
-      try {
-        const parsedTheme = JSON.parse(saved);
-        // Only use saved values if they exist, otherwise use defaults
-        return {
-          primaryColor: parsedTheme.primaryColor || this.defaultTheme.primaryColor,
-          secondaryColor: parsedTheme.secondaryColor || this.defaultTheme.secondaryColor,
-          backgroundColor: parsedTheme.backgroundColor || this.defaultTheme.backgroundColor,
-          textColor: parsedTheme.textColor || this.defaultTheme.textColor,
-          accentColor: parsedTheme.accentColor || this.defaultTheme.accentColor
-        };
-      } catch (error) {
-        console.error('Failed to load theme:', error);
-      }
-    }
-    return this.defaultTheme;
-  }
 
-  private saveTheme(theme: ThemeConfig) {
-    try {
-      localStorage.setItem('dashboardTheme', JSON.stringify(theme));
-    } catch (error) {
-      console.error('Failed to save theme:', error);
-    }
-  }
 
   private applyTheme(theme: ThemeConfig) {
     const root = document.documentElement;
@@ -90,11 +66,21 @@ export class ThemeService {
   }
 
   updateTheme(updates: Partial<ThemeConfig>) {
-    this.currentTheme.update(current => ({ ...current, ...updates }));
+    const newTheme = { ...this.currentTheme(), ...updates };
+    this.currentTheme.set(newTheme);
+    this.storageService.updateTheme(newTheme);
   }
 
   resetToDefault() {
-    this.currentTheme.set({ ...this.defaultTheme });
+    const defaultTheme = {
+      primaryColor: '#6366F1',
+      secondaryColor: '#C7D2FE',
+      backgroundColor: '#F9FAFB',
+      textColor: '#6E7583',
+      accentColor: '#CCE5FF'
+    };
+    this.currentTheme.set(defaultTheme);
+    this.storageService.updateTheme(defaultTheme);
   }
 
   getPresetThemes(): { name: string; theme: ThemeConfig }[] {

@@ -1,4 +1,4 @@
-import { computed, effect, Injectable, signal, OnDestroy } from '@angular/core';
+import { computed, effect, Injectable, signal, OnDestroy, inject } from '@angular/core';
 import { Widget } from '../model/dashboard';
 import { SubscriberComponent } from '../component/widgets/subscriber/subscriber.component';
 import { ViewsComponent } from '../component/widgets/views/views.component';
@@ -6,6 +6,7 @@ import { WatchTimeComponent } from '../component/widgets/watch-time/watch-time.c
 import { RevenueComponent } from '../component/widgets/revenue/revenue.component';
 import { AnalyticsComponent } from '../component/widgets/anelatics/anelatics.component';
 import { SupersetService } from '../../superset/service/superset.service';
+import { StorageService } from '../../shared/services/storage.service';
 import { Subscription } from 'rxjs';
 
 @Injectable()
@@ -14,6 +15,7 @@ export class DashboardService implements OnDestroy {
 
   widgets = signal<Widget[]>([]);
   addedWidgets = signal<Widget[]>([]);
+  isLoading = signal<boolean>(true);
 
 
   widgetsToAdd = computed(() => {
@@ -97,33 +99,24 @@ export class DashboardService implements OnDestroy {
 // dashboard.service.ts
   private isInitialized = signal<boolean>(false);
 
+  private storageService = inject(StorageService);
+  
   saveWidgets = effect(() => {
     if (!this.isInitialized()) {
       return;
     }
 
     const widgets = this.addedWidgets();
-    if (widgets.length === 0) {
-      return;
-    }
-
-    try {
-      const widgetsToSave = widgets.map(w => ({
-        id: w.id,
-        rows: w.rows,
-        cols: w.cols,
-        backgroundColor: w.backgroundColor,
-        color: w.color,
-        sliceId: w.sliceId
-      }));
-      localStorage.setItem(
-        'dashboardWidgets',
-        JSON.stringify(widgetsToSave)
-      );
-      console.log('Saved widgets:', widgetsToSave);
-    } catch (error) {
-      console.error('Failed to save widgets:', error);
-    }
+    const widgetsToSave = widgets.map(w => ({
+      id: w.id,
+      rows: w.rows,
+      cols: w.cols,
+      backgroundColor: w.backgroundColor,
+      color: w.color,
+      sliceId: w.sliceId
+    }));
+    
+    this.storageService.updateWidgets(widgetsToSave);
   });
 
   // constructor() {
@@ -163,6 +156,9 @@ export class DashboardService implements OnDestroy {
 
         // ✅ 3. Now restore added widgets
         this.restoreAddedWidgets(fetchedWidgets);
+        
+        // ✅ 4. Set loading to false
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Failed to load charts from Superset', err);
@@ -180,23 +176,28 @@ export class DashboardService implements OnDestroy {
         ]);
         // Still try to restore saved ones if any
         this.restoreAddedWidgets([]);
+        
+        // Set loading to false even on error
+        this.isLoading.set(false);
       }
     })
     );
   }
 
   private restoreAddedWidgets(allWidgets: Widget[]): void {
-    const savedWidgetsJsonString = localStorage.getItem('dashboardWidgets') || '[]';
+    // Migrate old storage first
+    this.storageService.migrateOldStorage();
+    
+    const savedWidgets = this.storageService.config().widgets;
 
-    if (savedWidgetsJsonString === '[]') {
+    if (savedWidgets.length === 0) {
       console.log('No saved widgets found');
       this.isInitialized.set(true);
       return;
     }
 
     try {
-      const savedWidgets: Partial<Widget>[] = JSON.parse(savedWidgetsJsonString);
-      console.log('Saved widgets from localStorage:', savedWidgets);
+      console.log('Saved widgets from unified storage:', savedWidgets);
 
       const restored = savedWidgets
         .map(saved => {
