@@ -16,6 +16,7 @@ import {
 import { WidgetPanelComponent } from '../component/widget/widget-panel/widget-panel.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ChartSettingsComponent } from '../component/settings/chart-settings/chart-settings.component';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog.component';
 
 
 @Component({
@@ -33,7 +34,8 @@ import { ChartSettingsComponent } from '../component/settings/chart-settings/cha
     CdkDropList,
     WidgetPanelComponent,
     CdkDrag,
-    ChartSettingsComponent
+    ChartSettingsComponent,
+    ConfirmationDialogComponent
   ],
   providers: [DashboardService],
   styles: `
@@ -455,12 +457,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const { previousContainer, container, item } = event;
     const widgetId = item.data;
     
+    console.log('InsertAt called:', { widgetId, position, previousContainer, container });
+    
     if (previousContainer !== container && widgetId) {
       const widget = this.store.widgets().find(w => w.id === widgetId);
+      console.log('Found widget for insertAt:', widget);
       if (widget) {
-        const newWidgets = [...this.store.addedWidgets()];
-        newWidgets.splice(position, 0, widget);
-        this.store.addedWidgets.set(newWidgets);
+        this.store.addWidget(widget);
+        console.log('Widget added via insertAt');
       }
     }
   }

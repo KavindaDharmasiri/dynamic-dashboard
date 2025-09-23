@@ -42,6 +42,13 @@ export class DashboardService implements OnDestroy {
   }
 
   addWidget(w: Widget) {
+    const existingWidget = this.addedWidgets().find(widget => widget.id === w.id);
+    if (existingWidget) {
+      console.log('Widget already exists:', w.id);
+      return; // Widget already added
+    }
+    
+    console.log('Adding widget:', w);
     this.addedWidgets.set([...this.addedWidgets(), { ...w }]);
   }
 
@@ -248,10 +255,16 @@ export class DashboardService implements OnDestroy {
       return;
     }
 
-    const addedWidgets = this.addedWidgets();
+    // Check if widget already exists
+    const existingWidget = this.addedWidgets().find(w => w.id === sourceWidgetId);
+    if (existingWidget) {
+      return; // Widget already added
+    }
+
+    const addedWidgets = [...this.addedWidgets()];
     const indexOfDestWidget = addedWidgets.findIndex(w => w.id === destWidgetId);
     const positionToAdd = indexOfDestWidget === -1 ? addedWidgets.length : indexOfDestWidget;
-    addedWidgets.splice(positionToAdd, 0, widgetToAdd);
+    addedWidgets.splice(positionToAdd, 0, { ...widgetToAdd });
     this.addedWidgets.set(addedWidgets);
   }
 }

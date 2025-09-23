@@ -7,6 +7,7 @@ import { MatIconButton } from '@angular/material/button';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { ChartSettingsComponent } from '../settings/chart-settings/chart-settings.component';
 import { DashboardService } from '../../service/dashboard.service';
+import { ConfirmationService } from '../../../shared/services/confirmation.service';
 
 @Component({
   selector: 'app-widget',
@@ -34,9 +35,17 @@ export class WidgetComponent {
   data = input.required<Widget>();
   Math = Math;
   store = inject(DashboardService);
+  confirmationService = inject(ConfirmationService);
 
   showOptions = signal(false);
   @Input() mode!: 'view' | 'edit';
+  
+  async confirmDelete() {
+    const confirmed = await this.confirmationService.confirmDelete('widget');
+    if (confirmed) {
+      this.store.removeWidget(this.data().id);
+    }
+  }
   
   openChartSettings() {
     // Emit event to parent to open chart settings

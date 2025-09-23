@@ -6,7 +6,7 @@ cdkDragPreviewContainer="parent">
     <h3 class="m-0">{{data().label}}</h3>
   }
   <div class="widget-controls" *ngIf="mode === 'edit'">
-    <button mat-icon-button class="delete-widget" (click)="store.removeWidget(data().id)" title="Delete Widget">
+    <button mat-icon-button class="delete-widget" (click)="confirmDelete()" title="Delete Widget">
       <mat-icon>delete</mat-icon>
     </button>
     <button mat-icon-button class="widget-settings" (click)="showOptions.set(true)" title="Widget Settings">
