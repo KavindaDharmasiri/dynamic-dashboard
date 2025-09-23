@@ -9,11 +9,13 @@ import { MatMenuModule } from '@angular/material/menu';
 import { TemplateService } from '../service/template.service';
 import { DashboardService } from '../service/dashboard.service';
 import { CreateTemplateDialogComponent } from './create-template-dialog.component';
+import { ToastService } from '../../shared/services/toast.service';
+import { ToastComponent } from '../../shared/components/toast.component';
 
 @Component({
   selector: 'app-templates',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, MatDialogModule, MatMenuModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, MatDialogModule, MatMenuModule, ToastComponent],
   providers: [DashboardService],
   template: `
     <div class="templates-container">
@@ -81,6 +83,8 @@ import { CreateTemplateDialogComponent } from './create-template-dialog.componen
           </div>
         }
       </div>
+      
+      <app-toast></app-toast>
     </div>
   `,
   styles: [`
@@ -188,6 +192,7 @@ export class TemplatesComponent {
   private dashboardService = inject(DashboardService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   createNewTemplate() {
     const dialogRef = this.dialog.open(CreateTemplateDialogComponent, {
@@ -231,11 +236,17 @@ export class TemplatesComponent {
   }
 
   publishTemplate(id: string) {
-    this.templateService.publishTemplate(id);
-    // Load the published template into dashboard
-    const template = this.templateService.getTemplates()().find(t => t.id === id);
-    if (template) {
-      this.loadTemplateIntoDashboard(template.widgets);
+    const result = this.templateService.publishTemplate(id);
+    
+    if (result.success) {
+      this.toastService.success(`Template '${result.templateName}' published successfully!`);
+      // Load the published template into dashboard
+      const template = this.templateService.getTemplates()().find(t => t.id === id);
+      if (template) {
+        this.loadTemplateIntoDashboard(template.widgets);
+      }
+    } else {
+      this.toastService.error(result.message);
     }
   }
 

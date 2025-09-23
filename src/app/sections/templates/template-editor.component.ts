@@ -33,7 +33,10 @@ import { wrapGrid } from 'animate-css-grid';
       <div class="editor-header">
         <div class="template-info">
           <div class="template-display">
-            <h2>{{ templateName || 'Untitled Template' }}</h2>
+            <h2>
+              <mat-icon>dashboard</mat-icon>
+              {{ templateName || 'Untitled Template' }}
+            </h2>
             <p>{{ templateDescription || 'No description' }}</p>
           </div>
           <button mat-icon-button (click)="editTemplateInfo()" title="Edit Template Info">
@@ -104,11 +107,14 @@ import { wrapGrid } from 'animate-css-grid';
       justify-content: space-between;
       align-items: center;
       padding: 1.5rem 2rem;
-      background: var(--theme-background, #f9fafb);
+      background: var(--theme-background, rgba(255, 255, 255, 0.9));
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--theme-primary, #6366f1);
+      border: 1px solid var(--theme-secondary, rgba(255, 255, 255, 0.3));
+      border-radius: 12px;
       gap: 2rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin: 2rem;
+      margin-bottom: 1rem;
     }
 
     .template-info {
@@ -126,6 +132,16 @@ import { wrapGrid } from 'animate-css-grid';
           font-weight: 600;
           color: var(--theme-text, #333);
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          
+          mat-icon {
+            color: var(--theme-primary, #6366f1);
+            font-size: 1.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+          }
         }
         
         p {
@@ -163,7 +179,7 @@ import { wrapGrid } from 'animate-css-grid';
 
     .editor-content {
       flex: 1;
-      padding: 2rem;
+      padding: 0 2rem 2rem 2rem;
       overflow: auto;
     }
 
@@ -173,33 +189,39 @@ import { wrapGrid } from 'animate-css-grid';
       grid-auto-rows: minmax(200px, auto);
       gap: 1.5rem;
       width: 100%;
+      background: var(--theme-background, rgba(255, 255, 255, 0.9));
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--theme-secondary, rgba(255, 255, 255, 0.3));
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      min-height: 400px;
       
       &.cdk-drop-list-receiving {
-        background: var(--theme-secondary, #c7d2fe);
-        border-radius: 12px;
+        background: var(--theme-accent, rgba(99, 102, 241, 0.1));
+        border-color: var(--theme-primary, #6366f1);
         transform: scale(1.01);
-        box-shadow: 0 8px 32px var(--theme-primary, #6366f1);
-        opacity: 0.3;
+        box-shadow: 0 8px 32px var(--theme-primary, rgba(99, 102, 241, 0.2));
       }
     }
 
     .empty-drop-zone {
       grid-column: 1 / -1;
-      min-height: 400px;
+      min-height: 300px;
       border: 2px dashed var(--theme-primary, #6366f1);
-      border-radius: 12px;
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       color: var(--theme-primary, #6366f1);
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--theme-secondary, rgba(255, 255, 255, 0.1));
       opacity: 0.4;
       transition: all 0.3s ease;
       
       &.cdk-drop-list-receiving {
         border-color: var(--theme-primary, #6366f1);
-        background: rgba(255, 255, 255, 0.2);
+        background: var(--theme-accent, rgba(255, 255, 255, 0.2));
         opacity: 0.6;
         transform: scale(1.02);
       }
@@ -458,7 +480,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
         console.log('Updated template:', this.templateId);
       }
       
-      this.toastService.success('Template saved successfully!');
+      this.toastService.success(`Template '${this.templateName}' saved successfully!`);
       this.restorePublishedTheme();
       // Delay navigation to show toast
       setTimeout(() => {

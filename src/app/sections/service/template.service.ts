@@ -61,7 +61,17 @@ export class TemplateService {
     this.saveTemplates();
   }
 
-  publishTemplate(id: string): void {
+  publishTemplate(id: string): { success: boolean; message: string; templateName?: string } {
+    const template = this.templates().find(t => t.id === id);
+    
+    if (!template) {
+      return { success: false, message: 'Template not found' };
+    }
+    
+    if (!template.widgets || template.widgets.length === 0) {
+      return { success: false, message: 'Cannot publish empty template. Please add at least one widget.' };
+    }
+    
     this.templates.update(templates => 
       templates.map(t => ({ ...t, isPublished: t.id === id }))
     );
@@ -73,6 +83,8 @@ export class TemplateService {
       this.applyTheme(publishedTemplate.theme);
       console.log('Applied published template theme immediately');
     }
+    
+    return { success: true, message: 'Template published successfully!', templateName: template.name };
   }
 
   saveCurrentDashboardAsTemplate(name: string, description: string, widgets: TemplateWidget[]): DashboardTemplate {
