@@ -466,6 +466,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
       } else {
         this.store.updateWidgetPosition(previousContainer.data, container.data);
       }
+      this.autoSaveTemplate();
     }
   }
 
@@ -477,6 +478,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
       const widget = this.store.widgets().find(w => w.id === widgetId);
       if (widget) {
         this.store.addWidget(widget);
+        this.autoSaveTemplate();
       }
     }
   }
@@ -484,6 +486,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   widgetPutBack(event: CdkDragDrop<number, any>) {
     const { previousContainer } = event;
     this.store.removeWidget(previousContainer.data);
+    this.autoSaveTemplate();
   }
 
   saveTemplate() {
@@ -590,6 +593,27 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     root.style.setProperty('--theme-text', theme.textColor);
     root.style.setProperty('--theme-accent', theme.accentColor);
     console.log('Applied template theme:', theme);
+  }
+
+  private autoSaveTemplate() {
+    if (!this.templateId || !this.templateName.trim()) return;
+    
+    const currentWidgets = this.store.addedWidgets().map(w => ({
+      id: w.id,
+      label: w.label || '',
+      rows: w.rows,
+      cols: w.cols,
+      x: w.x || 0,
+      y: w.y || 0,
+      backgroundColor: w.backgroundColor,
+      color: w.color,
+      sliceId: w.sliceId,
+      hideTitle: w.hideTitle || false
+    }));
+
+    this.templateService.updateTemplate(this.templateId, {
+      widgets: currentWidgets
+    });
   }
 
   private restorePublishedTheme() {
