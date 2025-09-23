@@ -30,8 +30,8 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--outline);
-  background: var(--surface-variant);
+  border-bottom: 1px solid rgba(var(--theme-primary-rgb, 99, 102, 241), 0.1);
+  background: rgba(var(--theme-background-rgb, 255, 255, 255), 0.9);
   
   .header-left {
     display: flex;
@@ -47,17 +47,17 @@
   }
   
   mat-icon {
-    color: var(--primary);
+    color: var(--theme-primary, #6366F1);
   }
   
   button {
-    background: white;
-    color: var(--primary);
-    border: 1px solid var(--outline);
+    background: rgba(var(--theme-background-rgb, 255, 255, 255), 0.9);
+    color: var(--theme-primary, #6366F1);
+    border: 1px solid rgba(var(--theme-primary-rgb, 99, 102, 241), 0.2);
     
     &:hover {
-      background: var(--surface-variant);
-      color: var(--primary-dark);
+      background: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.1);
+      color: var(--theme-primary, #6366F1);
     }
   }
 }

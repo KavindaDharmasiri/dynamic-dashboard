@@ -100,7 +100,7 @@ import { FormsModule } from '@angular/forms';
     }
 
     .theme-panel {
-      background: white;
+      background: var(--theme-background, white);
       border-radius: 16px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       max-width: 500px;
@@ -115,8 +115,8 @@ import { FormsModule } from '@angular/forms';
       justify-content: space-between;
       align-items: center;
       padding: 20px 24px;
-      border-bottom: 1px solid #e5e7eb;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-bottom: 1px solid rgba(var(--theme-primary-rgb, 99, 102, 241), 0.2);
+      background: linear-gradient(135deg, var(--theme-primary, #667eea) 0%, var(--theme-secondary, #764ba2) 100%);
       color: white;
     }
 
@@ -180,19 +180,20 @@ import { FormsModule } from '@angular/forms';
       align-items: center;
       gap: 8px;
       padding: 16px 12px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid rgba(var(--theme-primary-rgb, 99, 102, 241), 0.2);
       border-radius: 12px;
-      background: white;
+      background: var(--theme-background, white);
       cursor: pointer;
       transition: all 0.2s ease;
       font-size: 12px;
       font-weight: 500;
+      color: var(--theme-text, #6E7583);
     }
 
     .preset-card:hover {
-      border-color: #667eea;
+      border-color: var(--theme-primary, #667eea);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+      box-shadow: 0 4px 12px rgba(var(--theme-primary-rgb, 99, 102, 241), 0.3);
     }
 
     .preset-colors {
@@ -231,14 +232,14 @@ import { FormsModule } from '@angular/forms';
     .color-input input[type="color"] {
       width: 100%;
       height: 40px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid rgba(var(--theme-primary-rgb, 99, 102, 241), 0.2);
       border-radius: 8px;
       cursor: pointer;
       transition: border-color 0.2s ease;
     }
 
     .color-input input[type="color"]:hover {
-      border-color: #667eea;
+      border-color: var(--theme-primary, #667eea);
     }
 
     .theme-actions {
