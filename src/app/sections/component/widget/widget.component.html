@@ -1,5 +1,5 @@
 <div class="container mat-elevation-z3
-" [style.background-color]="data().backgroundColor ?? 'white'" [style.color]="data().color ?? 'inherit'"
+" [style.background-color]="data().backgroundColor ?? 'var(--theme-background, white)'" [style.color]="data().color ?? 'var(--theme-text, inherit)'"
 cdkDrag
 cdkDragPreviewContainer="parent">
   @if (!data().hideTitle) {

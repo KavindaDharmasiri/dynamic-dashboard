@@ -7,6 +7,7 @@ import { RevenueComponent } from '../component/widgets/revenue/revenue.component
 import { AnalyticsComponent } from '../component/widgets/anelatics/anelatics.component';
 import { SupersetService } from '../../superset/service/superset.service';
 import { StorageService } from '../../shared/services/storage.service';
+import { TemplateService } from './template.service';
 import { Subscription } from 'rxjs';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class DashboardService implements OnDestroy {
   widgets = signal<Widget[]>([]);
   addedWidgets = signal<Widget[]>([]);
   isLoading = signal<boolean>(true);
+  isTemplateEditorMode = false;
 
 
   widgetsToAdd = computed(() => {
@@ -101,28 +103,35 @@ export class DashboardService implements OnDestroy {
 
   private storageService = inject(StorageService);
   
-  saveWidgets = effect(() => {
-    if (!this.isInitialized()) {
-      return;
-    }
+  // Removed saveWidgets effect - templates handle their own storage
 
-    const widgets = this.addedWidgets();
-    const widgetsToSave = widgets.map(w => ({
-      id: w.id,
-      rows: w.rows,
-      cols: w.cols,
-      backgroundColor: w.backgroundColor,
-      color: w.color,
-      sliceId: w.sliceId,
-      hideTitle: w.hideTitle || false
-    }));
-    
-    this.storageService.updateWidgets(widgetsToSave);
-  });
+  private applyTheme(theme: any) {
+    const root = document.documentElement;
+    root.style.setProperty('--theme-primary', theme.primaryColor);
+    root.style.setProperty('--theme-secondary', theme.secondaryColor);
+    root.style.setProperty('--theme-background', theme.backgroundColor);
+    root.style.setProperty('--theme-text', theme.textColor);
+    root.style.setProperty('--theme-accent', theme.accentColor);
+    console.log('Applied theme:', theme);
+  }
+
+  private applyDefaultTheme() {
+    const defaultTheme = {
+      primaryColor: '#6366F1',
+      secondaryColor: '#C7D2FE',
+      backgroundColor: '#F9FAFB',
+      textColor: '#6E7583',
+      accentColor: '#CCE5FF'
+    };
+    this.applyTheme(defaultTheme);
+    console.log('Applied default theme');
+  }
 
   // constructor() {
   //   this.fetchWidgets();
   // }
+
+  private templateService = inject(TemplateService);
 
   constructor(private supersetService: SupersetService) {
     this.loadAllChartsAndRestore();
@@ -186,46 +195,52 @@ export class DashboardService implements OnDestroy {
   }
 
   private restoreAddedWidgets(allWidgets: Widget[]): void {
-    // Migrate old storage first
-    this.storageService.migrateOldStorage();
-    
-    const savedWidgets = this.storageService.config().widgets;
-
-    if (savedWidgets.length === 0) {
-      console.log('No saved widgets found');
+    // Skip auto-loading if we're in template editor mode
+    if (this.isTemplateEditorMode) {
+      console.log('Template editor mode - skipping auto-restore');
       this.isInitialized.set(true);
       return;
     }
 
-    try {
-      console.log('Saved widgets from unified storage:', savedWidgets);
-
-      const restored = savedWidgets
-        .map(saved => {
-          // 1. Find base widget (from Superset) to get content, label, etc.
-          const template = allWidgets.find(w => w.id === saved.id);
-          if (!template) return undefined;
-
-          // 2. ✅ Merge: use saved layout, but keep content from template
+    // Check if there's a published template to load
+    const publishedTemplate = this.templateService.getPublishedTemplate();
+    
+    if (publishedTemplate) {
+      console.log('Loading published template:', publishedTemplate.name);
+      // Load from published template
+      const templateWidgets = publishedTemplate.widgets
+        .map(tw => {
+          const baseWidget = allWidgets.find(w => w.id === tw.id);
+          if (!baseWidget) return null;
+          
           return {
-            ...template,           // content, label, sliceId, etc.
-            rows: saved.rows ?? template.rows,      // ✅ Preserve saved size
-            cols: saved.cols ?? (saved as any).columns ?? template.cols,  // Handle both old and new property names
-            backgroundColor: saved.backgroundColor ?? template.backgroundColor,
-            color: saved.color ?? template.color,
-            hideTitle: (saved as any).hideTitle ?? false
+            ...baseWidget,
+            label: tw.label || baseWidget.label,
+            rows: tw.rows,
+            cols: tw.cols,
+            x: tw.x || 0,
+            y: tw.y || 0,
+            backgroundColor: tw.backgroundColor,
+            color: tw.color,
+            hideTitle: tw.hideTitle || false
           };
         })
-        .filter(w => w !== undefined) as Widget[];
-
-      console.log('Restored widgets:', restored);
-      // @ts-ignore
-      this.addedWidgets.set(restored);
-    } catch (e) {
-      console.error('Failed to parse saved widgets', e);
+        .filter(w => w !== null) as Widget[];
+      
+      this.addedWidgets.set(templateWidgets);
+      
+      // Apply published template theme
+      if (publishedTemplate.theme) {
+        this.applyTheme(publishedTemplate.theme);
+      }
+      
+      this.isInitialized.set(true);
+      return;
     }
 
-    // ✅ Now safe to save
+    console.log('No published template found - dashboard stays empty');
+    // Apply default theme when no published template
+    this.applyDefaultTheme();
     this.isInitialized.set(true);
   }
 
@@ -269,5 +284,19 @@ export class DashboardService implements OnDestroy {
     const positionToAdd = indexOfDestWidget === -1 ? addedWidgets.length : indexOfDestWidget;
     addedWidgets.splice(positionToAdd, 0, { ...widgetToAdd });
     this.addedWidgets.set(addedWidgets);
+  }
+
+  saveCurrentAsTemplate(name: string, description: string = '') {
+    const currentWidgets = this.addedWidgets().map(w => ({
+      id: w.id,
+      rows: w.rows,
+      cols: w.cols,
+      backgroundColor: w.backgroundColor,
+      color: w.color,
+      sliceId: w.sliceId,
+      hideTitle: w.hideTitle || false
+    }));
+    
+    return this.templateService.createTemplate(name, description, currentWidgets);
   }
 }

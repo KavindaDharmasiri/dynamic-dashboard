@@ -28,10 +28,7 @@ export class StorageService {
   config = signal<DashboardConfig>(this.loadConfig());
 
   constructor() {
-    // Auto-save when config changes
-    effect(() => {
-      this.saveConfig(this.config());
-    });
+    // Disabled auto-save - templates handle their own storage
   }
 
   private loadConfig(): DashboardConfig {
@@ -77,12 +74,7 @@ export class StorageService {
     }));
   }
 
-  updateWidgets(widgets: any[]) {
-    this.config.update(current => ({
-      ...current,
-      widgets: [...widgets]
-    }));
-  }
+  // Removed updateWidgets - templates handle their own storage
 
   // Migration method to consolidate old storage
   migrateOldStorage() {

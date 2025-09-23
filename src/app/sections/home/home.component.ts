@@ -19,6 +19,8 @@ import { ChartSettingsComponent } from '../component/settings/chart-settings/cha
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog.component';
 import { ThemeSettingsComponent } from '../../shared/components/theme-settings.component';
 import { StorageService } from '../../shared/services/storage.service';
+import { CreateTemplateDialogComponent } from '../templates/create-template-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -38,7 +40,8 @@ import { StorageService } from '../../shared/services/storage.service';
     CdkDrag,
     ChartSettingsComponent,
     ConfirmationDialogComponent,
-    ThemeSettingsComponent
+    ThemeSettingsComponent,
+    CreateTemplateDialogComponent
   ],
   providers: [DashboardService],
   styles: `
@@ -712,6 +715,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private storageService = inject(StorageService);
+  private dialog = inject(MatDialog);
   
   viewMode = signal<'view' | 'edit'>(this.storageService.config().mode);
 
@@ -752,6 +756,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
         })
         .catch(console.error);
     }
+  }
+
+  saveAsTemplate() {
+    const dialogRef = this.dialog.open(CreateTemplateDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.store.saveCurrentAsTemplate(result.name, result.description);
+      }
+    });
   }
 
 }

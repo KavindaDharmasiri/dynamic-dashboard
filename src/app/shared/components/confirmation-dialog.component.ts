@@ -1,65 +1,43 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { ConfirmationService } from '../services/confirmation.service';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-confirmation-dialog',
   standalone: true,
-  imports: [MatButton, MatIcon, NgIf],
+  imports: [CommonModule, MatButtonModule, MatIconModule],
   template: `
-    @if (confirmationService.activeDialog(); as dialog) {
+    @if (confirmationService.activeDialog()) {
       <div class="confirmation-overlay" (click)="confirmationService.dismiss()">
-        <div class="confirmation-dialog" [class]="'dialog-' + dialog.type" (click)="$event.stopPropagation()">
-          <div class="dialog-decoration"></div>
-
+        <div class="confirmation-dialog" (click)="$event.stopPropagation()">
           <div class="dialog-header">
-            <div class="dialog-icon-container">
-              <div class="icon-background" [class]="'bg-' + dialog.type">
-                <mat-icon class="dialog-icon">
-                  @switch (dialog.type) {
-                    @case ('danger') { delete_forever }
-                    @case ('warning') { warning_amber }
-                    @default { info }
-                  }
-                </mat-icon>
-              </div>
-            </div>
-            <h3 class="dialog-title">{{ dialog.title }}</h3>
-            <p class="dialog-subtitle">This action cannot be undone</p>
+            <mat-icon [class]="'icon-' + confirmationService.activeDialog()!.type">
+              @switch (confirmationService.activeDialog()!.type) {
+                @case ('danger') { warning }
+                @case ('warning') { warning }
+                @default { info }
+              }
+            </mat-icon>
+            <h3>{{ confirmationService.activeDialog()!.title }}</h3>
           </div>
-
+          
           <div class="dialog-content">
-            <div class="dialog-message">
-              <p class="dialog-text">{{ dialog.text }}</p>
-              <div class="warning-indicator" *ngIf="dialog.type === 'danger'">
-                <mat-icon>shield</mat-icon>
-                <span>This will permanently remove the item</span>
-              </div>
-            </div>
+            <p>{{ confirmationService.activeDialog()!.text }}</p>
           </div>
-
+          
           <div class="dialog-actions">
-            @if (dialog.showCancel) {
-              <button mat-stroked-button
-                      class="cancel-btn"
-                      (click)="confirmationService.resolve(false)">
-                <mat-icon>close</mat-icon>
-                {{ dialog.cancelText }}
+            @if (confirmationService.activeDialog()!.showCancel) {
+              <button mat-button (click)="confirmationService.resolve(false)">
+                {{ confirmationService.activeDialog()!.cancelText }}
               </button>
             }
-            <button mat-raised-button
-                    class="confirm-btn"
-                    [class]="dialog.type === 'danger' ? 'danger-btn' : 'primary-btn'"
-                    (click)="confirmationService.resolve(true)">
-              <mat-icon>
-                @switch (dialog.type) {
-                  @case ('danger') { delete }
-                  @default { check }
-                }
-              </mat-icon>
-              {{ dialog.confirmText }}
+            <button 
+              mat-raised-button 
+              [class]="'btn-' + confirmationService.activeDialog()!.type"
+              (click)="confirmationService.resolve(true)">
+              {{ confirmationService.activeDialog()!.confirmText }}
             </button>
           </div>
         </div>
@@ -73,236 +51,109 @@ import { NgIf } from '@angular/common';
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
-      backdrop-filter: blur(8px);
-      z-index: 10000;
+      background: rgba(0, 0, 0, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: fadeIn 0.3s ease-out;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
     }
 
     .confirmation-dialog {
-      background: linear-gradient(145deg, var(--theme-background, #ffffff) 0%, #f8fafc 100%);
-      border-radius: 24px;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.2);
-      max-width: 420px;
-      width: 90%;
-      overflow: hidden;
-      animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      position: relative;
+      background: white;
+      border-radius: 12px;
+      padding: 0;
+      min-width: 400px;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s ease-out;
     }
 
-    .dialog-decoration {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--theme-primary, #667eea) 0%, var(--theme-secondary, #764ba2) 50%, var(--theme-accent, #f093fb) 100%);
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
     }
 
     .dialog-header {
-      padding: 32px 32px 24px;
-      text-align: center;
-      position: relative;
-    }
-
-    .dialog-icon-container {
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .icon-background {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      animation: iconPulse 2s infinite;
-    }
+      gap: 1rem;
+      padding: 1.5rem 1.5rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
 
-    .icon-background.bg-danger {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-      box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
-    }
+      mat-icon {
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+        
+        &.icon-danger {
+          color: #ef4444;
+        }
+        
+        &.icon-warning {
+          color: #f59e0b;
+        }
+        
+        &.icon-info {
+          color: #3b82f6;
+        }
+      }
 
-    .icon-background.bg-warning {
-      background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
-      box-shadow: 0 8px 32px rgba(254, 202, 87, 0.3);
-    }
-
-    .icon-background.bg-info {
-      background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-      box-shadow: 0 8px 32px rgba(116, 185, 255, 0.3);
-    }
-
-    .dialog-icon {
-      color: white;
-      font-size: 36px;
-      width: 36px;
-      height: 36px;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    }
-
-    .dialog-title {
-      margin: 0 0 8px 0;
-      font-size: 24px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .dialog-subtitle {
-      margin: 0;
-      color: #718096;
-      font-size: 14px;
-      font-weight: 500;
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+      }
     }
 
     .dialog-content {
-      padding: 0 32px 24px;
-    }
+      padding: 1rem 1.5rem;
 
-    .dialog-message {
-      text-align: center;
-    }
-
-    .dialog-text {
-      margin: 0 0 16px 0;
-      color: #4a5568;
-      font-size: 16px;
-      line-height: 1.6;
-      font-weight: 500;
-    }
-
-    .warning-indicator {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 16px;
-      background: rgba(255, 107, 107, 0.1);
-      border: 1px solid rgba(255, 107, 107, 0.2);
-      border-radius: 12px;
-      color: #e53e3e;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .warning-indicator mat-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
+      p {
+        margin: 0;
+        color: #6b7280;
+        line-height: 1.5;
+      }
     }
 
     .dialog-actions {
-      padding: 0 32px 32px;
       display: flex;
-      gap: 16px;
-      justify-content: center;
-    }
+      gap: 0.75rem;
+      justify-content: flex-end;
+      padding: 1rem 1.5rem 1.5rem;
 
-    .cancel-btn {
-      background: rgba(113, 128, 150, 0.1);
-      color: #4a5568;
-      border: 2px solid rgba(113, 128, 150, 0.2);
-      border-radius: 12px;
-      padding: 12px 24px;
-      font-weight: 600;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 120px;
-      justify-content: center;
-    }
-
-    .cancel-btn:hover {
-      background: rgba(113, 128, 150, 0.15);
-      border-color: rgba(113, 128, 150, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(113, 128, 150, 0.2);
-    }
-
-    .confirm-btn {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 24px;
-      font-weight: 600;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 120px;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .confirm-btn.primary-btn {
-      background: linear-gradient(135deg, var(--theme-primary, #667eea) 0%, var(--theme-secondary, #764ba2) 100%);
-      color: white;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    .confirm-btn.primary-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-    }
-
-    .confirm-btn.danger-btn {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-      color: white;
-      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    }
-
-    .confirm-btn.danger-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
-    }
-
-    .confirm-btn mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        backdrop-filter: blur(0px);
+      .btn-danger {
+        background-color: #ef4444 !important;
+        color: white !important;
+        
+        &:hover {
+          background-color: #dc2626 !important;
+        }
       }
-      to {
-        opacity: 1;
-        backdrop-filter: blur(8px);
-      }
-    }
 
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.9);
+      .btn-warning {
+        background-color: #f59e0b !important;
+        color: white !important;
+        
+        &:hover {
+          background-color: #d97706 !important;
+        }
       }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
 
-    @keyframes iconPulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
-      }
-      50% {
-        transform: scale(1.05);
-        box-shadow: 0 12px 40px rgba(255, 107, 107, 0.4);
+      .btn-info {
+        background-color: #3b82f6 !important;
+        color: white !important;
+        
+        &:hover {
+          background-color: #2563eb !important;
+        }
       }
     }
   `]

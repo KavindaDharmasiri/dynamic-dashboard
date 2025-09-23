@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { SidebarComponent } from './sections/component/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './app.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, MatListModule]
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, MatListModule, SidebarComponent]
 })
 export class AppComponent {}
