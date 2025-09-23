@@ -18,6 +18,7 @@ import { ThemeSettingsComponent } from '../../shared/components/theme-settings.c
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog.component';
 import { ToastComponent } from '../../shared/components/toast.component';
 import { ToastService } from '../../shared/services/toast.service';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../shared/components/breadcrumb.component';
 import { wrapGrid } from 'animate-css-grid';
 
 @Component({
@@ -25,10 +26,11 @@ import { wrapGrid } from 'animate-css-grid';
   standalone: true,
   imports: [
     CommonModule, MatButtonModule, MatIconModule, MatInputModule, 
-    MatFormFieldModule, FormsModule, DragDropModule, WidgetComponent, WidgetPanelComponent, ThemeSettingsComponent, ConfirmationDialogComponent, ToastComponent
+    MatFormFieldModule, FormsModule, DragDropModule, WidgetComponent, WidgetPanelComponent, ThemeSettingsComponent, ConfirmationDialogComponent, ToastComponent, BreadcrumbComponent
   ],
   providers: [DashboardService],
   template: `
+    <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
     <div class="template-editor">
       <div class="editor-header">
         <div class="template-info">
@@ -333,6 +335,12 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   templateName = '';
   templateDescription = '';
   isNewTemplate = true;
+
+  breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Dashboard', route: '/', icon: 'home' },
+    { label: 'Templates', route: '/templates', icon: 'view_module' },
+    { label: 'Edit Template', icon: 'edit' }
+  ];
 
   ngOnInit() {
     this.templateId = this.route.snapshot.paramMap.get('id');
