@@ -83,7 +83,7 @@ import { NgIf } from '@angular/common';
     }
 
     .confirmation-dialog {
-      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      background: linear-gradient(145deg, var(--theme-background, #ffffff) 0%, #f8fafc 100%);
       border-radius: 24px;
       box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.2);
       max-width: 420px;
@@ -99,7 +99,7 @@ import { NgIf } from '@angular/common';
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      background: linear-gradient(90deg, var(--theme-primary, #667eea) 0%, var(--theme-secondary, #764ba2) 50%, var(--theme-accent, #f093fb) 100%);
     }
 
     .dialog-header {
@@ -246,7 +246,7 @@ import { NgIf } from '@angular/common';
     }
 
     .confirm-btn.primary-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, var(--theme-primary, #667eea) 0%, var(--theme-secondary, #764ba2) 100%);
       color: white;
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
     }

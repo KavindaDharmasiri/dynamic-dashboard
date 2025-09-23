@@ -61,10 +61,13 @@ export class StorageService {
   }
 
   updateTheme(theme: Partial<ThemeConfig>) {
-    this.config.update(current => ({
-      ...current,
-      theme: { ...current.theme, ...theme }
-    }));
+    const currentConfig = this.config();
+    const newConfig = {
+      ...currentConfig,
+      theme: { ...currentConfig.theme, ...theme }
+    };
+    console.log('Updating theme in storage:', newConfig);
+    this.config.set(newConfig);
   }
 
   updateMode(mode: 'view' | 'edit') {

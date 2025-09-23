@@ -21,14 +21,16 @@ export class ThemeService {
     // Migrate old storage on first load
     this.storageService.migrateOldStorage();
     
+    // Initialize with stored theme
+    const storedTheme = this.storageService.config().theme;
+    this.currentTheme.set(storedTheme);
+    
+    // Apply theme immediately
+    this.applyTheme(storedTheme);
+    
     // Apply theme when it changes
     effect(() => {
       this.applyTheme(this.currentTheme());
-    });
-    
-    // Listen to storage changes
-    effect(() => {
-      this.currentTheme.set(this.storageService.config().theme);
     });
   }
 
@@ -67,8 +69,17 @@ export class ThemeService {
 
   updateTheme(updates: Partial<ThemeConfig>) {
     const newTheme = { ...this.currentTheme(), ...updates };
+    
+    // Update storage directly
+    const currentConfig = this.storageService.config();
+    const newConfig = {
+      ...currentConfig,
+      theme: newTheme
+    };
+    this.storageService.config.set(newConfig);
+    
+    // Update current theme
     this.currentTheme.set(newTheme);
-    this.storageService.updateTheme(newTheme);
   }
 
   resetToDefault() {
@@ -79,8 +90,17 @@ export class ThemeService {
       textColor: '#6E7583',
       accentColor: '#CCE5FF'
     };
+    
+    // Update storage directly
+    const currentConfig = this.storageService.config();
+    const newConfig = {
+      ...currentConfig,
+      theme: defaultTheme
+    };
+    this.storageService.config.set(newConfig);
+    
+    // Update current theme
     this.currentTheme.set(defaultTheme);
-    this.storageService.updateTheme(defaultTheme);
   }
 
   getPresetThemes(): { name: string; theme: ThemeConfig }[] {

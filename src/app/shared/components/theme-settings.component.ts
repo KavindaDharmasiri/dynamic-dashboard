@@ -292,11 +292,12 @@ export class ThemeSettingsComponent {
   }
 
   applyPreset(theme: any) {
-    this.themeService.currentTheme.set(theme);
+    this.themeService.updateTheme(theme);
   }
 
   updateColor(property: string, event: any) {
     const color = event.target.value;
-    this.themeService.updateTheme({ [property]: color });
+    const updates = { [property]: color } as Partial<any>;
+    this.themeService.updateTheme(updates);
   }
 }

@@ -640,7 +640,7 @@ import { StorageService } from '../../shared/services/storage.service';
 export class HomeComponent implements OnInit, AfterViewInit {
   store = inject(DashboardService);
 
-  dashboard = viewChild.required<ElementRef>('dashboard');
+  dashboard = viewChild<ElementRef>('dashboard');
   chartSettings = viewChild.required<ChartSettingsComponent>('chartSettings');
   themeSettings = viewChild.required<ThemeSettingsComponent>('themeSettings');
 
@@ -648,8 +648,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // wrapGrid(this.dashboard().nativeElement, { duration: 300 });
   }
   ngAfterViewInit(): void {
-    if (this.dashboard()) {
-      wrapGrid(this.dashboard().nativeElement, { duration: 300 });
+    const dashboardEl = this.dashboard();
+    if (dashboardEl) {
+      wrapGrid(dashboardEl.nativeElement, { duration: 300 });
     }
     
     window.addEventListener('openChartSettings', (event: any) => {

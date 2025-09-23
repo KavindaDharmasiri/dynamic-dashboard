@@ -113,7 +113,8 @@ export class DashboardService implements OnDestroy {
       cols: w.cols,
       backgroundColor: w.backgroundColor,
       color: w.color,
-      sliceId: w.sliceId
+      sliceId: w.sliceId,
+      hideTitle: w.hideTitle || false
     }));
     
     this.storageService.updateWidgets(widgetsToSave);
@@ -211,10 +212,11 @@ export class DashboardService implements OnDestroy {
             rows: saved.rows ?? template.rows,      // ✅ Preserve saved size
             cols: saved.cols ?? (saved as any).columns ?? template.cols,  // Handle both old and new property names
             backgroundColor: saved.backgroundColor ?? template.backgroundColor,
-            color: saved.color ?? template.color
+            color: saved.color ?? template.color,
+            hideTitle: (saved as any).hideTitle ?? false
           };
         })
-        .filter((w): w is Widget => !!w);
+        .filter(w => w !== undefined) as Widget[];
 
       console.log('Restored widgets:', restored);
       // @ts-ignore

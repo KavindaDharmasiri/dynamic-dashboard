@@ -1,7 +1,7 @@
 :host {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(var(--theme-background-rgb, 255, 255, 255), 0.95);
   backdrop-filter: var(--blur);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(var(--theme-primary-rgb, 99, 102, 241), 0.2);
   box-shadow: var(--shadow-xl);
   position: fixed;
   right: 2rem;
@@ -43,7 +43,7 @@
     margin: 0;
     font-size: 1rem;
     font-weight: 600;
-    color: var(--on-surface);
+    color: var(--theme-text, #6E7583);
   }
   
   mat-icon {
