@@ -1,59 +1,5 @@
 
 <div cdkDropListGroup>
-  @if (viewMode() === 'edit') {
-  <div class="header">
-    <div class="header-left">
-      <h2>Analytics Dashboard</h2>
-    </div>
-
-    <div class="header-center">
-      <!-- Mode toggle removed from header -->
-    </div>
-
-    <div class="header-right">
-      <button mat-icon-button class="header-action-btn" [disabled]="viewMode() == 'view'" (click)="widgetsOpen.set(!widgetsOpen())" title="Add Widget">
-        @if(widgetsOpen()) {
-          <mat-icon>close</mat-icon>
-        } @else {
-          <mat-icon>add_circle</mat-icon>
-        }
-      </button>
-
-      <button mat-icon-button class="header-action-btn" (click)="saveAsTemplate()" title="Save as Template">
-        <mat-icon>save</mat-icon>
-      </button>
-      
-      <button mat-icon-button class="header-action-btn theme-btn" (click)="themeSettings.open()" title="Theme Settings">
-        <mat-icon>palette</mat-icon>
-      </button>
-    </div>
-
-    <mat-menu #widgetmenu="matMenu">
-      @for (widget of store.widgetsToAdd(); track widget.id) {
-        <button mat-menu-item (click)="store.addWidget(widget)">
-          {{widget.label}}
-        </button>
-      } @empty {
-        <button mat-menu-item >
-          No widgets to add
-        </button>
-      }
-    </mat-menu>
-  </div>
-  } @else {
-    <div class="view-toggle" [hidden]="true">
-      <mat-button-toggle-group
-        [value]="viewMode()"
-        (valueChange)="onModeChange($event)">
-        <mat-button-toggle value="view">
-          <mat-icon>visibility</mat-icon>
-        </mat-button-toggle>
-        <mat-button-toggle value="edit">
-          <mat-icon>edit</mat-icon>
-        </mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
-  }
   @if (store.isLoading()) {
     <div class="loading-screen">
       <div class="loading-spinner">
@@ -65,7 +11,7 @@
   } @else if (store.addedWidgets().length > 0) {
     <div #dashboard class="dashboard-widgets">
       @for (w of store.addedWidgets(); track w.id) {
-        <app-widget cdkDropList [data]="w" [mode]="viewMode()" (cdkDropListDropped)="drop($event)" [cdkDropListData]="w.id" [cdkDropListDisabled]="viewMode() === 'view'" cdkDropListSortingDisabled>
+        <app-widget cdkDropList [data]="w" mode="view" (cdkDropListDropped)="drop($event)" [cdkDropListData]="w.id" cdkDropListDisabled cdkDropListSortingDisabled>
           <div *cdkDragPlaceholder class="drop-placeholder">
             <mat-icon>swap_horiz</mat-icon>
             <span>Drop here to replace</span>
@@ -75,54 +21,16 @@
       <div cdkDropList></div>
     </div>
   } @else {
-    @if (viewMode() === 'edit') {
-      <div #dashboard class="dashboard-widgets"
-           cdkDropList
-           [cdkDropListData]="-1"
-           (cdkDropListDropped)="drop2($event)"
-           (cdkDropListEntered)="isDragOver = true"
-           (cdkDropListExited)="isDragOver = false">
-        <div class="empty-drop-zone" [class.drag-over]="isDragOver">
-          <mat-icon>add_box</mat-icon>
-          <span>Drag a widget here</span>
-        </div>
+    <div #dashboard class="dashboard-widgets">
+      <div class="empty-state">
+        <mat-icon>dashboard</mat-icon>
+        <h3>No widgets to display</h3>
+        <p>No dashboard template is currently published</p>
       </div>
-    } @else {
-      <div #dashboard class="dashboard-widgets">
-        <div class="empty-state">
-          <mat-icon>dashboard</mat-icon>
-          <h3>No widgets to display</h3>
-          <p>Switch to edit mode to add widgets</p>
-        </div>
-      </div>
-    }
-  }
-
-  @if (widgetsOpen() && viewMode() == 'edit'){
-    <app-widget-panel
-      cdkDropList
-      cdkDrag
-      [cdkDropListDisabled]="viewMode() === 'view'"
-      (cdkDropListDropped)="widgetPutBack($event)"
-    />
+    </div>
   }
 
   <app-chart-settings #chartSettings></app-chart-settings>
   <app-confirmation-dialog></app-confirmation-dialog>
   <app-theme-settings #themeSettings></app-theme-settings>
-
-  <!-- Floating Mode Selector -->
-  <div class="floating-mode-trigger-top"></div>
-  <div class="floating-mode-selector">
-    <mat-button-toggle-group
-      [value]="viewMode()"
-      (valueChange)="onModeChange($event)">
-      <mat-button-toggle value="view">
-        <mat-icon>visibility</mat-icon>
-      </mat-button-toggle>
-      <mat-button-toggle value="edit">
-        <mat-icon>edit</mat-icon>
-      </mat-button-toggle>
-    </mat-button-toggle-group>
-  </div>
 </div>
