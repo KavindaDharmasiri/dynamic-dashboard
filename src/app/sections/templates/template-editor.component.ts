@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, viewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, inject, OnInit, signal, viewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -321,6 +321,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   private templateService = inject(TemplateService);
   private dialog = inject(MatDialog);
   private toastService = inject(ToastService);
+  private cdr = inject(ChangeDetectorRef);
   
   constructor() {
     // Set template editor mode to prevent auto-loading
@@ -566,6 +567,17 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
       if (result) {
         this.templateName = result.name;
         this.templateDescription = result.description;
+        
+        // Immediately save the name and description changes
+        if (this.templateId) {
+          this.templateService.updateTemplate(this.templateId, {
+            name: this.templateName.trim(),
+            description: this.templateDescription.trim()
+          });
+        }
+        
+        // Force change detection to update the UI
+        this.cdr.detectChanges();
       }
     });
   }

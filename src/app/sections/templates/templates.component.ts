@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -50,7 +50,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../shared/components/bre
         }
 
         <div class="templates-grid">
-        @for (template of paginatedTemplates(); track template.id) {
+        @for (template of templateService.getTemplates()(); track template.id) {
           <mat-card class="template-card" [class.published]="template.isPublished">
             <mat-card-header>
               <mat-card-title>{{ template.name }}</mat-card-title>
@@ -309,18 +309,29 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../shared/components/bre
 
   `]
 })
-export class TemplatesComponent {
+export class TemplatesComponent implements OnInit {
   templateService = inject(TemplateService);
   private dashboardService = inject(DashboardService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
   private toastService = inject(ToastService);
   private confirmationService = inject(ConfirmationService);
+  private cdr = inject(ChangeDetectorRef);
 
   pageSize = 6;
   currentPage = 0;
 
   paginatedTemplates = signal(this.templateService.getTemplates()().slice(0, this.pageSize));
+
+  ngOnInit() {
+    this.templateService.loadTemplates();
+    this.updatePaginatedTemplates();
+    
+    // Set up interval to check for template updates
+    setInterval(() => {
+      this.cdr.detectChanges();
+    }, 1000);
+  }
 
   breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Dashboard', route: '/', icon: 'home' },
@@ -353,6 +364,8 @@ export class TemplatesComponent {
       if (result) {
         // Create empty template first
         const newTemplate = this.templateService.createTemplate(result.name, result.description, []);
+        // Reload templates to refresh the UI
+        this.templateService.loadTemplates();
         // Navigate to edit the new template
         this.router.navigate(['/templates/edit', newTemplate.id]);
       }
@@ -389,6 +402,7 @@ export class TemplatesComponent {
     const result = this.templateService.publishTemplate(id);
 
     if (result.success) {
+      this.updatePaginatedTemplates();
       this.toastService.success(`Template '${result.templateName}' published successfully!`);
       // Load the published template into dashboard
       const template = this.templateService.getTemplates()().find(t => t.id === id);
