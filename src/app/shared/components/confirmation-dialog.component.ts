@@ -2,17 +2,18 @@ import { Component, inject } from '@angular/core';
 import { ConfirmationService } from '../services/confirmation.service';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-confirmation-dialog',
   standalone: true,
-  imports: [MatButton, MatIcon],
+  imports: [MatButton, MatIcon, NgIf],
   template: `
     @if (confirmationService.activeDialog(); as dialog) {
       <div class="confirmation-overlay" (click)="confirmationService.dismiss()">
         <div class="confirmation-dialog" [class]="'dialog-' + dialog.type" (click)="$event.stopPropagation()">
           <div class="dialog-decoration"></div>
-          
+
           <div class="dialog-header">
             <div class="dialog-icon-container">
               <div class="icon-background" [class]="'bg-' + dialog.type">
@@ -28,7 +29,7 @@ import { MatIcon } from '@angular/material/icon';
             <h3 class="dialog-title">{{ dialog.title }}</h3>
             <p class="dialog-subtitle">This action cannot be undone</p>
           </div>
-          
+
           <div class="dialog-content">
             <div class="dialog-message">
               <p class="dialog-text">{{ dialog.text }}</p>
@@ -38,18 +39,18 @@ import { MatIcon } from '@angular/material/icon';
               </div>
             </div>
           </div>
-          
+
           <div class="dialog-actions">
             @if (dialog.showCancel) {
-              <button mat-stroked-button 
-                      class="cancel-btn" 
+              <button mat-stroked-button
+                      class="cancel-btn"
                       (click)="confirmationService.resolve(false)">
                 <mat-icon>close</mat-icon>
                 {{ dialog.cancelText }}
               </button>
             }
-            <button mat-raised-button 
-                    class="confirm-btn" 
+            <button mat-raised-button
+                    class="confirm-btn"
                     [class]="dialog.type === 'danger' ? 'danger-btn' : 'primary-btn'"
                     (click)="confirmationService.resolve(true)">
               <mat-icon>
@@ -273,11 +274,11 @@ import { MatIcon } from '@angular/material/icon';
     }
 
     @keyframes fadeIn {
-      from { 
+      from {
         opacity: 0;
         backdrop-filter: blur(0px);
       }
-      to { 
+      to {
         opacity: 1;
         backdrop-filter: blur(8px);
       }
@@ -295,11 +296,11 @@ import { MatIcon } from '@angular/material/icon';
     }
 
     @keyframes iconPulse {
-      0%, 100% { 
+      0%, 100% {
         transform: scale(1);
         box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
       }
-      50% { 
+      50% {
         transform: scale(1.05);
         box-shadow: 0 12px 40px rgba(255, 107, 107, 0.4);
       }

@@ -2,7 +2,7 @@
 <div cdkDropListGroup>
   @if (viewMode() === 'edit') {
   <div class="header">
-    <h2>Channel dashboard</h2>
+    <h2>Analytics Dashboard</h2>
 
     <!-- Mode Toggle: Edit / View -->
     <div class="mode-toggle" style="margin-right: 12px;">
@@ -30,6 +30,10 @@
         <mat-icon>add_circle</mat-icon>
       }
       widget
+    </button>
+    
+    <button mat-icon-button class="theme-btn" (click)="themeSettings.open()" title="Theme Settings">
+      <mat-icon>palette</mat-icon>
     </button>
 
     <mat-menu #widgetmenu="matMenu">
@@ -114,4 +118,5 @@
   
   <app-chart-settings #chartSettings></app-chart-settings>
   <app-confirmation-dialog></app-confirmation-dialog>
+  <app-theme-settings #themeSettings></app-theme-settings>
 </div>

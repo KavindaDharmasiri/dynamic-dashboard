@@ -17,6 +17,7 @@ import { WidgetPanelComponent } from '../component/widget/widget-panel/widget-pa
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ChartSettingsComponent } from '../component/settings/chart-settings/chart-settings.component';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog.component';
+import { ThemeSettingsComponent } from '../../shared/components/theme-settings.component';
 
 
 @Component({
@@ -35,7 +36,8 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
     WidgetPanelComponent,
     CdkDrag,
     ChartSettingsComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    ThemeSettingsComponent
   ],
   providers: [DashboardService],
   styles: `
@@ -69,11 +71,25 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
       width: 100%;
       max-width: 100%;
       overflow: hidden;
+      animation: dashboardSlideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       
       &.cdk-drop-list-receiving {
         background: rgba(99, 102, 241, 0.05);
         border-radius: var(--radius-lg);
-        transition: var(--transition-fast);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: scale(1.01);
+        box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
+      }
+    }
+    
+    @keyframes dashboardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
     
@@ -165,6 +181,23 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
     app-widget {
       grid-column: span var(--widget-cols, 1);
       grid-row: span var(--widget-rows, 1);
+      animation: widgetFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    
+    app-widget:nth-child(1) { animation-delay: 0.1s; }
+    app-widget:nth-child(2) { animation-delay: 0.2s; }
+    app-widget:nth-child(3) { animation-delay: 0.3s; }
+    app-widget:nth-child(4) { animation-delay: 0.4s; }
+    app-widget:nth-child(5) { animation-delay: 0.5s; }
+    app-widget:nth-child(6) { animation-delay: 0.6s; }
+    
+    @keyframes widgetFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
     
     app-widget[data-cols="4"] {
@@ -218,21 +251,57 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-lg);
       margin-bottom: 2rem;
-      transition: var(--transition);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: headerSlideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       
       h2 {
         margin: 0;
         font-weight: 700;
         font-size: 1.75rem;
-        background: var(--gradient);
+        background: linear-gradient(135deg, var(--theme-primary, #667eea) 0%, var(--theme-secondary, #764ba2) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        animation: titleGlow 3s ease-in-out infinite;
+      }
+      
+      .theme-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--theme-primary, #667eea);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: var(--theme-primary, #667eea);
+          color: white;
+          transform: scale(1.1);
+        }
       }
       
       &:hover {
         box-shadow: var(--shadow-xl);
-        transform: translateY(-2px);
+        transform: translateY(-4px) scale(1.01);
+        border-color: rgba(99, 102, 241, 0.3);
+      }
+    }
+    
+    @keyframes headerSlideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes titleGlow {
+      0%, 100% {
+        filter: brightness(1);
+      }
+      50% {
+        filter: brightness(1.2);
       }
     }
     
@@ -372,6 +441,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   dashboard = viewChild.required<ElementRef>('dashboard');
   chartSettings = viewChild.required<ChartSettingsComponent>('chartSettings');
+  themeSettings = viewChild.required<ThemeSettingsComponent>('themeSettings');
 
   ngOnInit(): void {
     // wrapGrid(this.dashboard().nativeElement, { duration: 300 });

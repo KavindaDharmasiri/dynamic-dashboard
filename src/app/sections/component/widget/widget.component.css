@@ -22,12 +22,26 @@
   }
   
   &:hover:not(.cdk-drag-disabled) {
-    box-shadow: var(--shadow-xl);
-    transform: translateY(-2px);
-    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(99, 102, 241, 0.2);
+    transform: translateY(-4px) scale(1.02);
+    border-color: rgba(99, 102, 241, 0.4);
     
     &::before {
       opacity: 1;
+      animation: gradientShift 2s ease-in-out infinite;
+    }
+    
+    .container {
+      transform: scale(0.98);
+    }
+  }
+  
+  @keyframes gradientShift {
+    0%, 100% {
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    }
+    50% {
+      background: linear-gradient(90deg, #f093fb 0%, #667eea 50%, #764ba2 100%);
     }
   }
   
@@ -37,6 +51,22 @@
     
     &:active {
       cursor: grabbing;
+    }
+  }
+  
+  .container:not(.cdk-drag-disabled) {
+    cursor: grab;
+    
+    &:active {
+      cursor: grabbing;
+    }
+  }
+  
+  .widget-controls {
+    cursor: default;
+    
+    button {
+      cursor: pointer;
     }
   }
 }
@@ -50,6 +80,11 @@
   min-height: 200px;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  h3 {
+    transition: all 0.3s ease;
+  }
 }
 
 .widget-controls {
@@ -57,9 +92,10 @@
   top: 0.5rem;
   right: 0.5rem;
   display: flex;
-  gap: 4px;
+  gap: 6px;
   opacity: 0;
-  transition: all 0.2s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-10px) scale(0.8);
 }
 
 .widget-settings,
@@ -73,12 +109,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.3s ease;
+    transform: scale(0);
+  }
   
   mat-icon {
     font-size: 16px;
     width: 16px;
     height: 16px;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -86,20 +140,91 @@
   background: #2196F3;
   color: white;
   border-color: #2196F3;
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+  
+  &::before {
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    opacity: 1;
+    transform: scale(1);
+    animation: ripple 0.6s ease-out;
+  }
 }
 
 .chart-settings:hover {
   background: #FF9800;
   color: white;
   border-color: #FF9800;
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+  
+  &::before {
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    opacity: 1;
+    transform: scale(1);
+    animation: ripple 0.6s ease-out;
+  }
 }
 
 .delete-widget:hover {
   background: #f44336;
   color: white;
   border-color: #f44336;
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+  
+  &::before {
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    opacity: 1;
+    transform: scale(1);
+    animation: ripple 0.6s ease-out;
+  }
+  
+  mat-icon {
+    animation: shake 0.5s ease-in-out;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
 }
 
 :host:hover .widget-controls {
   opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+:host:hover .widget-controls > button {
+  animation: buttonBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+:host:hover .widget-controls > button:nth-child(1) { animation-delay: 0.1s; }
+:host:hover .widget-controls > button:nth-child(2) { animation-delay: 0.2s; }
+:host:hover .widget-controls > button:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes buttonBounce {
+  0% {
+    transform: scale(0.8) rotate(-10deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
 }

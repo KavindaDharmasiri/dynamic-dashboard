@@ -9,10 +9,11 @@
     </button>
   </div>
   @for(widget of store.widgetsToAdd(); track widget.id) {
-    <div cdkDrag class="text-sm text-center rounded-2xl bg-surface-container
-text-inverse-surface cursor-move px-4 py-2
-hover:bg-surface-container-high mat-elevation-z2" [cdkDragData]="widget.id">
-      {{widget.label}}
+    <div cdkDrag class="widget-item" [cdkDragData]="widget.id">
+      <div class="drag-handle" cdkDragHandle>
+        <mat-icon>drag_indicator</mat-icon>
+      </div>
+      <span class="widget-label">{{widget.label}}</span>
       <div *cdkDragPlaceholder class="drag-placeholder">
         <mat-icon>drag_indicator</mat-icon>
         <span>{{widget.label}}</span>
