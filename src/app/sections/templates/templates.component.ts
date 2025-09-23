@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { TemplateService } from '../service/template.service';
 import { DashboardService } from '../service/dashboard.service';
 import { CreateTemplateDialogComponent } from './create-template-dialog.component';
@@ -19,7 +20,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../shared/components/bre
 @Component({
   selector: 'app-templates',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatFabButton, MatIconModule, MatCardModule, MatDialogModule, MatMenuModule, ToastComponent, ConfirmationDialogComponent, BreadcrumbComponent],
+  imports: [CommonModule, MatButtonModule, MatFabButton, MatIconModule, MatCardModule, MatDialogModule, MatMenuModule, MatPaginatorModule, ToastComponent, ConfirmationDialogComponent, BreadcrumbComponent],
   providers: [DashboardService],
   template: `
     <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
@@ -49,7 +50,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../shared/components/bre
         }
 
         <div class="templates-grid">
-        @for (template of templateService.getTemplates()(); track template.id) {
+        @for (template of paginatedTemplates(); track template.id) {
           <mat-card class="template-card" [class.published]="template.isPublished">
             <mat-card-header>
               <mat-card-title>{{ template.name }}</mat-card-title>
@@ -106,6 +107,17 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../shared/components/bre
         }
         </div>
       </div>
+
+      @if (templateService.getTemplates()().length > 0) {
+        <mat-paginator
+          [length]="templateService.getTemplates()().length"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[6, 12, 24]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+          class="templates-paginator">
+        </mat-paginator>
+      }
 
       <app-toast></app-toast>
       <app-confirmation-dialog></app-confirmation-dialog>
@@ -287,6 +299,14 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../shared/components/bre
         opacity: 0.8;
       }
     }
+
+    .templates-paginator {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+
   `]
 })
 export class TemplatesComponent {
@@ -297,7 +317,29 @@ export class TemplatesComponent {
   private toastService = inject(ToastService);
   private confirmationService = inject(ConfirmationService);
 
+  pageSize = 6;
+  currentPage = 0;
+
+  paginatedTemplates = signal(this.templateService.getTemplates()().slice(0, this.pageSize));
+
   breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Dashboard', route: '/', icon: 'home' },
+    { label: 'Templates', icon: 'view_module' }
+  ];
+
+  onPageChange(event: any) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedTemplates();
+  }
+
+  updatePaginatedTemplates() {
+    const startIndex = this.currentPage * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedTemplates.set(this.templateService.getTemplates()().slice(startIndex, endIndex));
+  }
+
+  breadcrumbItems2: BreadcrumbItem[] = [
     { label: 'Dashboard', route: '/', icon: 'home' },
     { label: 'Templates', icon: 'view_module' }
   ];
@@ -388,6 +430,7 @@ export class TemplatesComponent {
 
       if (confirmed) {
         this.templateService.deleteTemplate(id);
+        this.updatePaginatedTemplates();
         this.toastService.success(`Template '${template.name}' deleted successfully!`);
       }
     }
