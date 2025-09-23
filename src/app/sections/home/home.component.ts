@@ -81,6 +81,14 @@ import { StorageService } from '../../shared/services/storage.service';
         transform: scale(1.01);
         box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
       }
+      
+      &:has(.empty-drop-zone),
+      &:has(.empty-state) {
+        display: block;
+        grid-template-columns: none;
+        grid-auto-rows: none;
+        gap: 0;
+      }
     }
     
     @keyframes dashboardSlideIn {
@@ -441,6 +449,7 @@ import { StorageService } from '../../shared/services/storage.service';
     }
 
     .empty-drop-zone {
+      width: 100%;
       min-height: 400px;
       border: 2px dashed rgba(var(--theme-primary-rgb, 99, 102, 241), 0.3);
       border-radius: 12px;
@@ -452,6 +461,8 @@ import { StorageService } from '../../shared/services/storage.service';
       padding: 2rem;
       background: rgba(var(--theme-primary-rgb, 99, 102, 241), 0.05);
       transition: all 0.3s ease;
+      margin: 0;
+      box-sizing: border-box;
       
       &.cdk-drop-list-receiving,
       &.drag-over {
